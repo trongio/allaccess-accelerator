@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALL access: ქაღალდის პროტოტიპი</title>
+<link rel="stylesheet" href="../../../vendor/fontawesome/css/all.css">
+<style>
+:root{
+  --paper:#f7f2e6; --sheet:#fffdf7; --ink:#2b2a28; --ink2:#5d5a54; --line:#c9c1ad;
+  --day:#2f6db5; --dayBg:#dbe8f7; --night:#3b2f7a; --nightBg:#ddd7f3; --h24:#2e7d4f; --h24Bg:#d9efdf;
+  --hl:#fff27a; --bad:#c0392b; --badBg:#fbd9d4; --sick:#8e44ad; --sickBg:#eedcf5; --swap:#1f7a8c; --swapBg:#cdeef2;
+  --late:#b7791f; --lateBg:#fdebc8;
+  --font:"Comic Neue","Patrick Hand","Segoe Print","Comic Sans MS","Marker Felt","Noto Sans Georgian","Noto Serif Georgian",sans-serif;
+  --wob:255px 12px 225px 12px/12px 225px 12px 255px;
+  --wob2:12px 225px 12px 255px/255px 12px 225px 12px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--paper);
+  background-image:repeating-linear-gradient(0deg,transparent 0 27px,rgba(120,150,190,.13) 27px 28px);
+  color:var(--ink); font-family:var(--font); font-size:15px; line-height:1.45;
+  min-height:100vh;
+}
+button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+td{-webkit-tap-highlight-color:transparent}
+.sk{border:2px solid var(--ink);border-radius:var(--wob);background:var(--sheet);box-shadow:3px 4px 0 rgba(43,42,40,.18)}
+/* top bar */
+.top{position:sticky;top:0;z-index:20;background:var(--sheet);border-bottom:2.5px solid var(--ink);
+  box-shadow:0 3px 0 rgba(43,42,40,.12)}
+.topin{display:flex;align-items:center;gap:14px;padding:8px 16px;max-width:1400px;margin:0 auto}
+.logo{font-weight:800;font-size:19px;letter-spacing:.5px;white-space:nowrap;display:flex;align-items:center;gap:7px}
+.logo i{font-size:18px}
+.org{font-size:12.5px;color:var(--ink2);white-space:nowrap}
+.nav{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none;padding:3px 2px}
+.nav::-webkit-scrollbar{display:none}
+.nav button{background:transparent;border:2px solid transparent;border-radius:var(--wob2);padding:6px 11px;white-space:nowrap;
+  display:flex;align-items:center;gap:7px;font-size:14.5px}
+.nav button:hover{border-color:var(--line)}
+.nav button.on{border-color:var(--ink);background:var(--hl)}
+.nav .cnt{background:var(--bad);color:#fff;border-radius:10px;font-size:11.5px;padding:0 7px;line-height:18px}
+.badge{white-space:nowrap;font-size:12px;border:2px dashed var(--bad);color:var(--bad);padding:3px 9px;border-radius:var(--wob);
+  transform:rotate(-2deg);background:#fff8f3}
+.user{white-space:nowrap;font-size:13px;color:var(--ink2);display:flex;align-items:center;gap:6px}
+main{max-width:1400px;margin:0 auto;padding:18px 16px 90px}
+.screen{display:none}
+.screen.on{display:block}
+h1{font-size:22px;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+.sub{color:var(--ink2);font-size:13.5px;margin:0 0 14px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 14px}
+.pill{border:2px solid var(--ink);border-radius:var(--wob2);padding:4px 12px;background:var(--sheet);font-size:14px;display:inline-flex;align-items:center;gap:7px}
+.pill.ghost{border-style:dashed;color:var(--ink2)}
+.btn{border:2px solid var(--ink);border-radius:var(--wob);background:var(--sheet);padding:7px 15px;display:inline-flex;align-items:center;gap:8px;
+  box-shadow:2px 3px 0 rgba(43,42,40,.25);font-size:14.5px}
+.btn:hover{background:#fffbe0}
+.btn:active{transform:translate(1px,2px);box-shadow:1px 1px 0 rgba(43,42,40,.25)}
+.btn.pri{background:var(--hl);font-weight:700}
+.btn.ok{background:#d6f0d9}
+.btn.no{background:#fde2dd}
+.btn.sm{padding:3px 10px;font-size:13px}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.card{padding:14px 16px;margin:0 0 16px}
+.wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* grids */
+table{border-collapse:collapse}
+.grid{font-size:13px}
+.grid th,.grid td{border:1.5px solid var(--line);text-align:center;padding:0;height:34px;min-width:31px}
+.grid th{font-weight:600;font-size:11.5px;line-height:1.15;padding:3px 1px;color:var(--ink2)}
+.grid th.we,.grid td.we{background:rgba(0,0,0,.035)}
+.grid .nm{text-align:left;padding:4px 10px;min-width:150px;white-space:nowrap;font-size:13.5px;position:sticky;left:0;background:var(--sheet);z-index:2;
+  border-right:2.5px solid var(--ink)}
+.grid .nm small{display:block;color:var(--ink2);font-size:11px}
+.grid td.c{cursor:pointer;position:relative}
+.grid td.c:hover{outline:2.5px solid var(--ink);outline-offset:-3px}
+.s{display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-weight:700;font-size:13px}
+.s.D{background:var(--dayBg);color:var(--day)}
+.s.N{background:var(--nightBg);color:var(--night)}
+.s.H{background:var(--h24Bg);color:var(--h24)}
+.moved{position:absolute;inset:3px;border:1.5px dashed var(--swap);border-radius:6px;display:flex;align-items:center;justify-content:center;color:var(--swap);font-size:11px}
+.newmark::after{content:"";position:absolute;right:2px;top:2px;width:7px;height:7px;border-radius:50%;background:var(--swap)}
+.sel{outline:3px solid var(--bad)!important;outline-offset:-3px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;color:var(--ink2);margin:10px 0 0}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{display:inline-block;width:20px;height:16px;border:1.5px solid var(--line);border-radius:4px}
+.tot{font-size:12.5px;color:var(--ink2);padding:0 8px!important;white-space:nowrap}
+/* popover */
+#pop{position:absolute;z-index:40;width:340px;padding:14px;display:none}
+#pop.on{display:block}
+#pop h3{margin:0 0 4px;font-size:16px;display:flex;align-items:center;gap:8px}
+#pop .meta{font-size:13px;color:var(--ink2);margin:0 0 10px}
+#pop .lbl{font-size:13px;margin:8px 0 6px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.8px solid var(--ink);border-radius:var(--wob2);background:var(--sheet);padding:3px 10px;font-size:13px}
+.chip.on{background:var(--hl);font-weight:700}
+.chip[disabled]{opacity:.4;text-decoration:line-through;cursor:not-allowed}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.warn{color:var(--bad);font-size:12.5px;margin-top:6px;min-height:0}
+/* approvals */
+.two{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;align-items:start}
+.req{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 14px;margin:0 0 12px}
+.req .ic{width:42px;height:42px;border:2px solid var(--ink);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.req .t{font-weight:700}
+.req .d{font-size:13px;color:var(--ink2)}
+.req .ra{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.st{font-size:13px;padding:3px 10px;border-radius:var(--wob2);border:1.8px solid;display:inline-flex;align-items:center;gap:6px}
+.st.ok{color:var(--h24);border-color:var(--h24);background:var(--h24Bg)}
+.st.no{color:var(--bad);border-color:var(--bad);background:var(--badBg)}
+.st.wait{color:var(--late);border-color:var(--late);background:var(--lateBg)}
+.tabs{display:flex;gap:6px;margin:0 0 12px;flex-wrap:wrap}
+.tabs span{font-size:13px;border-bottom:2px solid transparent;padding:2px 6px}
+.tabs span.on{border-color:var(--ink);font-weight:700}
+.bal{width:100%;font-size:14px}
+.bal td{padding:7px 4px;border-bottom:1.5px dashed var(--line)}
+.bal td:last-child{text-align:right;font-weight:700;white-space:nowrap}
+.flash{animation:fl 1.6s ease}
+@keyframes fl{0%,40%{background:var(--hl)}100%{background:transparent}}
+.who{display:flex;gap:10px;align-items:center;margin:0 0 10px}
+.ava{width:38px;height:38px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:700}
+/* attendance */
+.a{display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-size:12px;color:var(--ink2)}
+.a.ok{color:#8a867c}
+.a.swap{background:var(--swapBg);color:var(--swap);font-weight:700;box-shadow:inset 0 0 0 2px var(--swap)}
+.a.out{color:var(--swap);font-size:11px}
+.a.sick{background:var(--sickBg);color:var(--sick);font-weight:700;box-shadow:inset 0 0 0 2px var(--sick)}
+.a.abs{background:var(--badBg);color:var(--bad);font-weight:700;box-shadow:inset 0 0 0 2px var(--bad)}
+.a.uns{background:var(--badBg);color:var(--bad);font-weight:700;box-shadow:inset 0 0 0 2px var(--bad)}
+.a.late{background:var(--lateBg);color:var(--late);font-weight:700}
+.exl{list-style:none;margin:0;padding:0}
+.exl li{display:grid;grid-template-columns:110px 170px 1fr auto;gap:10px;padding:8px 4px;border-bottom:1.5px dashed var(--line);font-size:14px;align-items:center}
+.sum{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 14px}
+.kpi{padding:10px 16px;min-width:150px}
+.kpi b{display:block;font-size:24px}
+.kpi span{font-size:12.5px;color:var(--ink2)}
+.kpi.red b{color:var(--bad)}
+/* report */
+.rep{width:100%;font-size:14px}
+.rep th,.rep td{border-bottom:1.5px solid var(--line);padding:8px 8px;text-align:right;white-space:nowrap}
+.rep th{font-size:12.5px;color:var(--ink2);font-weight:600;vertical-align:bottom}
+.rep td:first-child,.rep th:first-child{text-align:left}
+.rep tfoot td{border-top:2.5px solid var(--ink);font-weight:700}
+.rep .hl{background:linear-gradient(transparent 55%,var(--hl) 55%)}
+.rep .flag{color:var(--bad);font-size:12.5px}
+.note{font-size:13px;color:var(--ink2);display:flex;gap:8px;align-items:flex-start}
+/* export */
+.form{display:grid;grid-template-columns:150px 1fr;gap:12px 16px;align-items:center;max-width:620px}
+.form label{font-weight:600;font-size:14px}
+.radio{display:flex;gap:8px;flex-wrap:wrap}
+.radio button{border:1.8px solid var(--ink);border-radius:var(--wob2);background:var(--sheet);padding:4px 14px;display:inline-flex;gap:7px;align-items:center}
+.radio button.on{background:var(--hl);font-weight:700}
+.file{display:flex;gap:14px;align-items:center;padding:14px 16px;margin:16px 0;max-width:620px;border-style:dashed}
+.file i.big{font-size:34px;color:var(--h24)}
+.audit{list-style:none;margin:0;padding:0;font-size:13.5px}
+.audit li{display:grid;grid-template-columns:62px 130px 1fr;gap:10px;padding:6px 2px;border-bottom:1.5px dashed var(--line)}
+.audit .h{font-family:ui-monospace,monospace;font-size:11.5px;color:var(--ink2)}
+.prog{height:12px;border:2px solid var(--ink);border-radius:var(--wob);overflow:hidden;max-width:620px;margin:12px 0}
+.prog div{height:100%;width:0;background:repeating-linear-gradient(45deg,var(--h24) 0 6px,#7fbf95 6px 12px);transition:width .9s ease}
+/* task card */
+#task{position:fixed;right:16px;bottom:16px;z-index:30;width:340px;max-width:calc(100vw - 32px);background:#fff9c9;border:2px solid var(--ink);
+  border-radius:var(--wob2);box-shadow:4px 5px 0 rgba(43,42,40,.22);transform:rotate(.6deg)}
+#task.hidden{display:none}
+#task .th{display:flex;align-items:center;gap:8px;padding:9px 12px;font-weight:700;cursor:pointer;user-select:none}
+#task .th .sp{flex:1}
+#task .tb{padding:0 14px 12px;font-size:14.5px}
+#task.col .tb{display:none}
+#task .x{background:none;border:none;padding:2px 6px;font-size:15px}
+/* facilitator log */
+#log{position:fixed;left:16px;bottom:16px;z-index:50;width:460px;max-width:calc(100vw - 32px);max-height:60vh;display:none;flex-direction:column;
+  background:#1f1f1d;color:#e8e4da;border-radius:10px;border:2px solid #000;font-family:ui-monospace,Menlo,monospace;font-size:12px;box-shadow:4px 6px 0 rgba(0,0,0,.25)}
+#log.on{display:flex}
+#log .lh{display:flex;gap:8px;align-items:center;padding:8px 10px;border-bottom:1px solid #444;font-family:var(--font);font-size:13px}
+#log .lh b{flex:1}
+#log .lh button{background:#333;border:1px solid #666;color:#eee;border-radius:5px;font-size:12px;padding:2px 8px}
+#log .steps{padding:6px 10px;border-bottom:1px solid #444;display:flex;flex-wrap:wrap;gap:4px 12px;font-family:var(--font);font-size:12.5px}
+#log .steps .d{color:#8fd19e}
+#log .steps .n{color:#999}
+#log .keys{padding:4px 10px;color:#aaa;font-family:var(--font);font-size:12px;border-bottom:1px solid #444}
+#log ol{margin:0;padding:6px 10px 10px 34px;overflow:auto;flex:1}
+#log li{padding:1px 0}
+#log li.sys{color:#f7d774}
+#log .ts{color:#8ab4f8}
+.toast{position:fixed;left:50%;top:70px;transform:translateX(-50%);z-index:60;padding:8px 16px;display:none;align-items:center;gap:8px;font-size:14px;background:#eaf7ec}
+.toast.on{display:flex}
+.foot{font-size:12px;color:var(--ink2);margin-top:22px;display:flex;gap:6px;align-items:center}
+@media (max-width:1380px){.org{display:none}}
+@media (max-width:1180px){.user{display:none}}
+@media (max-width:900px){
+  .two{grid-template-columns:1fr}
+  .exl li{grid-template-columns:1fr 1fr;}
+  .org,.user{display:none}
+}
+@media (max-width:640px){
+  body{font-size:14px}
+  .topin{flex-wrap:wrap;gap:6px 10px;padding:8px 12px}
+  .nav{order:3;flex-basis:100%}
+  .nav button span.lb{font-size:13.5px}
+  main{padding:14px 12px 120px}
+  h1{font-size:19px}
+  .req{grid-template-columns:auto 1fr}
+  .req .ra{grid-column:1/-1;justify-content:flex-start}
+  .form{grid-template-columns:1fr}
+  .audit li{grid-template-columns:52px 1fr;}
+  .audit li .h{grid-column:1/-1}
+  #pop{position:fixed;left:8px!important;right:8px;top:auto!important;bottom:8px;width:auto}
+  #task{left:12px;right:12px;bottom:10px;width:auto;transform:none}
+  .grid .nm{min-width:112px;padding:4px 6px}
+  .sum{gap:8px}
+  .kpi{min-width:0;flex:1 1 40%;padding:8px 12px}
+  .kpi b{font-size:20px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="topin">
+    <div class="logo"><i class="fa-light fa-door-open"></i>ALL access</div>
+    <div class="org">კლინიკა „მედ-ცენტრი“</div>
+    <nav class="nav" id="nav">
+      <button data-go="roster" data-log="ნავიგაცია: ცვლები"><i class="fa-light fa-calendar-days"></i><span class="lb">ცვლები</span></button>
+      <button data-go="approvals" data-log="ნავიგაცია: დასტურები"><i class="fa-light fa-inbox"></i><span class="lb">დასტურები</span><span class="cnt" id="navCnt">2</span></button>
+      <button data-go="attendance" data-log="ნავიგაცია: დასწრება"><i class="fa-light fa-clipboard-list"></i><span class="lb">დასწრება</span></button>
+      <button data-go="overtime" data-log="ნავიგაცია: ზეგანაკვეთური"><i class="fa-light fa-stopwatch"></i><span class="lb">ზეგანაკვეთური</span></button>
+      <button data-go="export" data-log="ნავიგაცია: ექსპორტი"><i class="fa-light fa-file-arrow-down"></i><span class="lb">ექსპორტი</span></button>
+    </nav>
+    <span class="badge">პროტოტიპი (ქაღალდის სტილი)</span>
+    <span class="user"><i class="fa-light fa-circle-user"></i>თამარი (HR)</span>
+  </div>
+</header>
+
+<main>
+  <!-- 1 roster -->
+  <section class="screen" id="s-roster">
+    <h1><i class="fa-light fa-calendar-days"></i>ცვლების გრაფიკი</h1>
+    <p class="sub">თვის ხედი</p>
+    <div class="bar">
+      <span class="pill"><i class="fa-light fa-hospital"></i>ქირურგიული განყოფილება <i class="fa-light fa-chevron-down"></i></span>
+      <span class="pill"><i class="fa-light fa-chevron-left"></i>ოქტომბერი 2026<i class="fa-light fa-chevron-right"></i></span>
+      <span class="pill ghost"><i class="fa-light fa-users"></i>6 თანამშრომელი</span>
+    </div>
+    <div class="card sk"><div class="wrap"><table class="grid" id="rosterGrid"></table></div>
+      <div class="legend">
+        <span><span class="sw" style="background:var(--dayBg)"></span><i class="fa-light fa-sun"></i>დ: დღე 08:00-20:00</span>
+        <span><span class="sw" style="background:var(--nightBg)"></span><i class="fa-light fa-moon"></i>ღ: ღამე 20:00-08:00</span>
+        <span><span class="sw" style="background:var(--h24Bg)"></span><i class="fa-light fa-clock"></i>24: სადღეღამისო 08:00-08:00</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 approvals -->
+  <section class="screen" id="s-approvals">
+    <h1><i class="fa-light fa-inbox"></i>დასტურები</h1>
+    <p class="sub">ყველა მოთხოვნა ერთ სიაში</p>
+    <div class="two">
+      <div>
+        <div class="tabs"><span class="on">მოლოდინში</span><span>ყველა</span></div>
+        <div id="reqList"></div>
+      </div>
+      <div class="card sk" id="balCard"></div>
+    </div>
+  </section>
+
+  <!-- 3 attendance -->
+  <section class="screen" id="s-attendance">
+    <h1><i class="fa-light fa-clipboard-list"></i>თვის დასწრება</h1>
+    <p class="sub">ფაქტი შედარებულია გრაფიკთან</p>
+    <div class="bar">
+      <span class="pill"><i class="fa-light fa-hospital"></i>ქირურგიული განყოფილება</span>
+      <span class="pill"><i class="fa-light fa-calendar"></i>ოქტომბერი 2026</span>
+    </div>
+    <div class="sum" id="attSum"></div>
+    <div class="card sk"><div class="wrap"><table class="grid" id="attGrid"></table></div>
+      <div class="legend">
+        <span><span class="sw" style="background:#fff"></span>დ / ღ / 24: გრაფიკის მიხედვით</span>
+        <span><span class="sw" style="background:var(--swapBg);border-color:var(--swap)"></span>გადანიშნული ცვლა</span>
+        <span><span class="sw" style="background:var(--sickBg);border-color:var(--sick)"></span>ავ: ავადმყოფობა</span>
+        <span><span class="sw" style="background:var(--lateBg)"></span>დაგვიანება</span>
+        <span><span class="sw" style="background:var(--badBg);border-color:var(--bad)"></span>შეუსაბამობა</span>
+      </div>
+    </div>
+    <div class="card sk">
+      <h3 style="margin:0 0 8px;font-size:16px"><i class="fa-light fa-list-check"></i> გამონაკლისები</h3>
+      <ul class="exl" id="exList"></ul>
+    </div>
+  </section>
+
+  <!-- 4 overtime -->
+  <section class="screen" id="s-overtime">
+    <h1><i class="fa-light fa-stopwatch"></i>ზეგანაკვეთური და დანამატები</h1>
+    <p class="sub">ოქტომბერი 2026 · ქირურგიული განყოფილება</p>
+    <div class="bar">
+      <span class="pill"><i class="fa-light fa-moon"></i>ღამის საათი (22:00-06:00): ×1.5</span>
+      <span class="pill"><i class="fa-light fa-stopwatch"></i>ზეგანაკვეთური: ×1.5</span>
+      <span class="pill ghost"><i class="fa-light fa-gear"></i>ტარიფები: პარამეტრები</span>
+    </div>
+    <div class="card sk"><div class="wrap"><table class="rep" id="otTable"></table></div></div>
+    <p class="note"><i class="fa-light fa-circle-info"></i><span>თვის ნორმა: 176 სთ (22 სამუშაო დღე × 8 სთ), შვებულების/ავადმყოფობის სამუშაო დღეები ნორმას აკლდება.</span></p>
+  </section>
+
+  <!-- 5 export -->
+  <section class="screen" id="s-export">
+    <h1><i class="fa-light fa-file-arrow-down"></i>ტაბელის ექსპორტი</h1>
+    <p class="sub">ხელფასისთვის</p>
+    <div class="card sk">
+      <div class="form">
+        <label>პერიოდი</label><span class="pill" style="justify-self:start"><i class="fa-light fa-calendar"></i>ოქტომბერი 2026</span>
+        <label>განყოფილება</label><span class="pill" style="justify-self:start"><i class="fa-light fa-hospital"></i>ქირურგიული განყოფილება</span>
+        <label>ფორმატი</label>
+        <div class="radio" id="fmt">
+          <button data-fmt="xlsx" class="on" data-log="ფორმატი: XLSX"><i class="fa-light fa-file-excel"></i>XLSX</button>
+          <button data-fmt="csv" data-log="ფორმატი: CSV"><i class="fa-light fa-file-csv"></i>CSV</button>
+        </div>
+        <label>შიგთავსი</label>
+        <div style="font-size:13.5px">ნამუშევარი საათები, ღამის საათები, ზეგანაკვეთური, დანამატები, შვებულება და ავადმყოფობა</div>
+      </div>
+      <p class="note" id="expInfo" style="margin:14px 0 0"></p>
+      <div style="margin-top:16px"><button class="btn pri" id="expBtn" data-log="ღილაკი: ექსპორტი"><i class="fa-solid fa-file-excel"></i><span id="expLbl">XLSX ჩამოტვირთვა</span></button></div>
+      <div class="prog" id="prog" style="display:none"><div></div></div>
+      <div id="fileOut"></div>
+    </div>
+    <div class="card sk">
+      <h3 style="margin:0 0 6px;font-size:16px"><i class="fa-light fa-shield-check"></i> აუდიტის ჟურნალი</h3>
+      <p class="note" style="margin:0 0 8px"><span>ყოველი ცვლილება (ვინ, როდის, რა) ჩაწერილია აუდიტის ჟურნალში და შემდეგ ვეღარ შეიცვლება.</span></p>
+      <ul class="audit" id="audit"></ul>
+    </div>
+  </section>
+
+  <div class="foot"><i class="fa-light fa-note-sticky"></i>სადემონსტრაციო მონაცემები: სახელები და რიცხვები გამოგონილია.</div>
+</main>
+
+<div id="pop" class="sk"></div>
+<div class="toast sk" id="toast"></div>
+
+<aside id="task">
+  <div class="th" id="taskHead" data-log="ამოცანის ბარათი: გაშლა/აკეცვა"><i class="fa-light fa-clipboard-list"></i><span class="sp">ამოცანა ტესტერისთვის</span>
+    <i class="fa-light fa-chevron-down" id="taskChev"></i>
+    <button class="x" id="taskHide" title="დამალვა (ფასილიტატორი)" data-log="ამოცანის ბარათი: დამალვა"><i class="fa-light fa-eye-slash"></i></button></div>
+  <div class="tb">დახურე ოქტომბერი ქირურგიული განყოფილებისთვის: 14 ოქტომბრის ღამის ცვლა გაიცვალა (ნინოს მაგივრად მაკომ იმუშავა), ერთი ექთანი 3 დღე ავად იყო. ბუღალტერს გაუგზავნე ტაბელი.</div>
+</aside>
+
+<aside id="log">
+  <div class="lh"><i class="fa-light fa-scroll"></i><b>ფასილიტატორის ჟურნალი</b>
+    <button id="logDl">.txt</button><button id="logClr">გასუფთავება</button><button id="logX">×</button></div>
+  <div class="steps" id="steps"></div>
+  <div class="keys">L: ჟურნალი · R: გადატვირთვა · T: ამოცანის ბარათი</div>
+  <ol id="logList"></ol>
+</aside>
+
+<script>
+(function(){
+"use strict";
+var DAYS=31, WD=["ორ","სა","ოთ","ხუ","პა","შა","კვ"];
+function wd(d){return (d+2)%7;} /* 1 Oct 2026 = Thursday, 0 = Monday */
+function isWe(d){return wd(d)>=5;}
+var EMP=[
+  {id:"nino",n:"ნინო ბერიძე",r:"ექთანი",pat:"DN",off:0},
+  {id:"mako",n:"მაკო ჯაფარიძე",r:"ექთანი",pat:"DN",off:2},
+  {id:"tea",n:"თეა კვარაცხელია",r:"ექთანი",pat:"DN",off:1},
+  {id:"lika",n:"ლიკა ხარაზიშვილი",r:"ექთანი",pat:"DN",off:3},
+  {id:"ana",n:"ანა ლომიძე",r:"უფროსი ექთანი",pat:"H",off:0},
+  {id:"eka",n:"ეკა გელაშვილი",r:"ექთანი",pat:"H",off:2}
+];
+var BY={};EMP.forEach(function(e){BY[e.id]=e;});
+var SH={D:{l:"დ",nm:"დღის ცვლა",t:"08:00-20:00",h:12,nh:0,ic:"fa-sun"},
+        N:{l:"ღ",nm:"ღამის ცვლა",t:"20:00-08:00",h:12,nh:8,ic:"fa-moon"},
+        H:{l:"24",nm:"სადღეღამისო ცვლა",t:"08:00-08:00",h:24,nh:8,ic:"fa-clock"}};
+function baseRoster(){
+  var r={};
+  EMP.forEach(function(e){
+    r[e.id]={};
+    for(var d=1;d<=DAYS;d++){
+      var i=(d-1+e.off)%4, c="";
+      if(e.pat==="DN"){c=i===0?"D":(i===1?"N":"");}else{c=i===0?"H":"";}
+      if(c)r[e.id][d]=c;
+    }
+  });
+  delete r.mako[15];
+  return r;
+}
+/* facts: what really happened (door/phone check-ins) */
+var FACT=baseRoster();
+delete FACT.nino[14]; FACT.mako[14]="N";
+delete FACT.tea[20]; delete FACT.tea[21];
+var LATE={"ana-9":18};
+var SICK={from:20,to:22,emp:"tea"};
+function inTime(e,d,c){var j=((d*7+e.length*3)%13)-9;var st=c==="N"?20:8;var m=(60+j)%60,h=j<0?st-1:st;return pad(h)+":"+pad(m);}
+function pad(n){return (n<10?"0":"")+n;}
+
+var S; /* state */
+function fresh(){return {roster:baseRoster(),moved:{},added:{},leave:{tea:"pending",lika:"pending"},fmt:"xlsx",exported:null,screen:"roster",audit:[],seen:{},flash:null};}
+S=fresh();
+
+/* ---------- log ---------- */
+var LOG=[], t0=Date.now();
+function now(){var d=new Date();return pad(d.getHours())+":"+pad(d.getMinutes())+":"+pad(d.getSeconds())+"."+String(d.getMilliseconds()).padStart(3,"0");}
+function el(){var s=Math.floor((Date.now()-t0)/1000);return "+"+pad(Math.floor(s/60))+":"+pad(s%60);}
+function log(msg,sys){LOG.push({t:now(),e:el(),m:msg,sys:!!sys});drawLog();}
+function drawLog(){
+  var ol=document.getElementById("logList");
+  ol.innerHTML=LOG.map(function(x){return '<li class="'+(x.sys?"sys":"")+'"><span class="ts">'+x.t+" "+x.e+"</span> "+esc(x.m)+"</li>";}).join("");
+  ol.scrollTop=ol.scrollHeight;
+  var st=[["swap","გაცვლა ჩაწერილი (14, ნინო → მაკო)",swapDone()],["leave","ავადმყოფობა დადასტურებული",S.leave.tea==="approved"],
+          ["att","დასწრება ნანახი",!!S.seen.attendance],["ot","ზეგანაკვეთური ნანახი",!!S.seen.overtime],["exp","ტაბელი ექსპორტირებული",!!S.exported]];
+  document.getElementById("steps").innerHTML=st.map(function(s){return '<span class="'+(s[2]?"d":"n")+'"><i class="fa-'+(s[2]?"solid fa-square-check":"light fa-square")+'"></i> '+s[1]+"</span>";}).join("");
+}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function swapDone(){return S.roster.mako[14]==="N"&&!S.roster.nino[14];}
+
+document.addEventListener("click",function(ev){
+  var t=ev.target; if(!t.closest||t.closest("#log"))return;
+  var d=t.closest("[data-log]"), msg;
+  if(d)msg=d.getAttribute("data-log");
+  else{var b=t.closest("button,td,li,.pill,h1,th");msg=b?(b.tagName.toLowerCase()+": "+(b.textContent||"").replace(/\s+/g," ").trim().slice(0,50)):"ცარიელი ადგილი ("+t.tagName.toLowerCase()+")";}
+  log("["+S.screen+"] კლიკი: "+msg);
+},true);
+
+/* ---------- nav ---------- */
+function go(s){
+  S.screen=s; S.seen[s]=true; closePop(); document.getElementById("toast").classList.remove("on");
+  document.querySelectorAll(".screen").forEach(function(x){x.classList.toggle("on",x.id==="s-"+s);});
+  document.querySelectorAll("#nav button").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-go")===s);});
+  render(); window.scrollTo(0,0);
+}
+document.getElementById("nav").addEventListener("click",function(e){var b=e.target.closest("button");if(b)go(b.getAttribute("data-go"));});
+
+function audit(what){var d=new Date();S.audit.unshift({t:pad(d.getHours())+":"+pad(d.getMinutes()),w:"თამარი (HR)",m:what,h:Math.random().toString(16).slice(2,10)});}
+function toast(html){var t=document.getElementById("toast");t.innerHTML=html;t.classList.add("on");clearTimeout(toast.k);toast.k=setTimeout(function(){t.classList.remove("on");},2600);}
+
+/* ---------- 1 roster ---------- */
+function head(extra){
+  var h='<tr><th class="nm">თანამშრომელი</th>';
+  for(var d=1;d<=DAYS;d++)h+='<th class="'+(isWe(d)?"we":"")+'">'+d+"<br>"+WD[wd(d)]+"</th>";
+  return h+(extra||"")+"</tr>";
+}
+function renderRoster(){
+  var h=head('<th class="tot">სთ</th>');
+  EMP.forEach(function(e){
+    var tot=0;
+    h+='<tr><td class="nm">'+e.n+"<small>"+e.r+"</small></td>";
+    for(var d=1;d<=DAYS;d++){
+      var c=S.roster[e.id][d], k=e.id+"-"+d, inner="", cls="c"+(isWe(d)?" we":"");
+      if(c){tot+=SH[c].h;inner='<span class="s '+c+'">'+SH[c].l+"</span>";if(S.added[k])cls+=" newmark";}
+      else if(S.moved[k]){inner='<span class="moved" title="'+esc(BY[S.moved[k]].n)+'"><i class="fa-light fa-arrow-right-arrow-left"></i></span>';}
+      h+='<td class="'+cls+'" data-e="'+e.id+'" data-d="'+d+'" data-log="ცვლის უჯრა: '+e.n+", "+d+" ოქტ ("+(c?SH[c].l:"ცარიელი")+')">'+inner+"</td>";
+    }
+    h+='<td class="tot">'+tot+"</td></tr>";
+  });
+  document.getElementById("rosterGrid").innerHTML=h;
+}
+document.getElementById("rosterGrid").addEventListener("click",function(ev){
+  var td=ev.target.closest("td.c"); if(!td)return; ev.stopPropagation();
+  openPop(td,td.getAttribute("data-e"),+td.getAttribute("data-d"));
+});
+var P={};
+function openPop(td,eid,d){
+  document.querySelectorAll(".sel").forEach(function(x){x.classList.remove("sel");});
+  td.classList.add("sel");
+  P={eid:eid,d:d,to:null,type:null,td:td};
+  var c=S.roster[eid][d], e=BY[eid], pop=document.getElementById("pop"), h;
+  var date=d+" ოქტომბერი ("+WD[wd(d)]+")";
+  if(c){
+    h='<h3><i class="fa-light '+SH[c].ic+'"></i>'+SH[c].nm+"</h3>"+
+      '<div class="meta">'+date+" · "+SH[c].t+"<br>"+e.n+"</div>"+
+      '<div class="lbl">გადანიშვნა თანამშრომელზე</div><div class="chips">'+
+      EMP.filter(function(x){return x.id!==eid;}).map(function(x){var busy=!!S.roster[x.id][d];
+        return '<button class="chip" data-to="'+x.id+'"'+(busy?" disabled title=\"ამ დღეს ცვლა აქვს\"":"")+' data-log="გადანიშვნის არჩევანი: '+x.n+(busy?" (დაკავებული)":"")+'">'+x.n+"</button>";}).join("")+
+      '</div><div class="warn" id="popWarn"></div><div class="acts">'+
+      '<button class="btn pri sm" id="popSave" data-log="ცვლა: შენახვა"><i class="fa-light fa-check"></i>შენახვა</button>'+
+      '<button class="btn no sm" id="popDel" data-log="ცვლა: წაშლა"><i class="fa-light fa-trash"></i>წაშლა</button>'+
+      '<button class="btn sm" id="popX" data-log="ცვლა: დახურვა"><i class="fa-light fa-xmark"></i>დახურვა</button></div>';
+  }else{
+    h='<h3><i class="fa-light fa-calendar-plus"></i>ცვლის დამატება</h3><div class="meta">'+date+"<br>"+e.n+"</div>"+
+      '<div class="chips">'+Object.keys(SH).map(function(k){return '<button class="chip" data-type="'+k+'" data-log="ახალი ცვლის ტიპი: '+SH[k].nm+'"><i class="fa-light '+SH[k].ic+'"></i> '+SH[k].nm+"</button>";}).join("")+
+      '</div><div class="warn" id="popWarn"></div><div class="acts">'+
+      '<button class="btn pri sm" id="popSave" data-log="ცვლა: დამატება"><i class="fa-light fa-plus"></i>დამატება</button>'+
+      '<button class="btn sm" id="popX" data-log="ცვლა: დახურვა"><i class="fa-light fa-xmark"></i>დახურვა</button></div>';
+  }
+  pop.innerHTML=h; pop.classList.add("on");
+  var r=td.getBoundingClientRect(), pw=340, left=r.left+window.scrollX+r.width/2-pw/2;
+  left=Math.max(8,Math.min(left,document.documentElement.clientWidth-pw-8));
+  var top=r.bottom+window.scrollY+8;
+  if(r.bottom+330>window.innerHeight&&r.top>340)top=r.top+window.scrollY-8-pop.offsetHeight;
+  pop.style.left=left+"px"; pop.style.top=top+"px";
+}
+function closePop(){document.getElementById("pop").classList.remove("on");document.querySelectorAll(".sel").forEach(function(x){x.classList.remove("sel");});}
+document.getElementById("pop").addEventListener("click",function(ev){
+  ev.stopPropagation();
+  var t=ev.target.closest("button"); if(!t||t.disabled)return;
+  if(t.hasAttribute("data-to")||t.hasAttribute("data-type")){
+    t.parentNode.querySelectorAll(".chip").forEach(function(x){x.classList.remove("on");});t.classList.add("on");
+    if(t.hasAttribute("data-to"))P.to=t.getAttribute("data-to");else P.type=t.getAttribute("data-type");
+    document.getElementById("popWarn").textContent="";return;
+  }
+  var e=BY[P.eid], d=P.d, c=S.roster[P.eid][d];
+  if(t.id==="popX"){closePop();return;}
+  if(t.id==="popDel"){
+    delete S.roster[P.eid][d]; audit(d+" ოქტ, "+SH[c].nm+": წაიშალა ("+e.n+")");
+    log("მოქმედება: "+e.n+"-ის "+d+" ოქტ "+SH[c].nm+" წაიშალა",true);
+    closePop(); renderRoster(); toast('<i class="fa-light fa-check"></i>ცვლა წაიშალა'); return;
+  }
+  if(t.id==="popSave"){
+    if(c){
+      if(!P.to){document.getElementById("popWarn").textContent="აირჩიე თანამშრომელი";return;}
+      var to=BY[P.to];
+      delete S.roster[P.eid][d]; S.roster[P.to][d]=c; S.moved[P.eid+"-"+d]=P.to; S.added[P.to+"-"+d]=P.eid; delete S.moved[P.to+"-"+d]; delete S.added[P.eid+"-"+d];
+      audit(d+" ოქტ, "+SH[c].nm+": "+e.n+" → "+to.n);
+      log("მოქმედება: "+d+" ოქტ "+SH[c].nm+" გადანიშნა "+e.n+" → "+to.n,true);
+      toast('<i class="fa-light fa-arrow-right-arrow-left"></i>'+d+" ოქტ: "+SH[c].nm+" ახლა "+to.n+"-ს აქვს");
+    }else{
+      if(!P.type){document.getElementById("popWarn").textContent="აირჩიე ცვლის ტიპი";return;}
+      S.roster[P.eid][d]=P.type; S.added[P.eid+"-"+d]="new";
+      audit(d+" ოქტ, "+SH[P.type].nm+": დაემატა ("+e.n+")");
+      log("მოქმედება: "+e.n+"-ს დაემატა "+d+" ოქტ "+SH[P.type].nm,true);
+      toast('<i class="fa-light fa-plus"></i>ცვლა დაემატა');
+    }
+    closePop(); renderRoster(); drawLog();
+  }
+});
+document.addEventListener("click",function(ev){if(!ev.target.closest("#pop")&&!ev.target.closest("td.c"))closePop();});
+
+/* ---------- 2 approvals ---------- */
+var REQ=[
+  {id:"tea",who:"tea",ic:"fa-bed-pulse",t:"ავადმყოფობა · 3 დღე",d:"20-22 ოქტომბერი · თეა კვარაცხელია",sub:"გაგზავნილია 20 ოქტ, 07:42"},
+  {id:"lika",who:"lika",ic:"fa-umbrella-beach",t:"ყოველწლიური შვებულება · 5 დღე",d:"9-13 ნოემბერი · ლიკა ხარაზიშვილი",sub:"გაგზავნილია 27 ოქტ, 16:10"}
+];
+var BAL={tea:{ann:[24,10],sick:2},lika:{ann:[24,6],sick:0}};
+var balWho="tea";
+function renderApprovals(){
+  var pend=0;
+  document.getElementById("reqList").innerHTML=REQ.map(function(r){
+    var st=S.leave[r.id], right;
+    if(st==="pending"){pend++;right='<button class="btn ok sm" data-ap="'+r.id+'" data-log="დასტური: დადასტურება ('+BY[r.who].n+')"><i class="fa-light fa-check"></i>დადასტურება</button>'+
+      '<button class="btn no sm" data-rj="'+r.id+'" data-log="დასტური: უარყოფა ('+BY[r.who].n+')"><i class="fa-light fa-xmark"></i>უარყოფა</button>';}
+    else right='<span class="st '+(st==="approved"?"ok":"no")+'"><i class="fa-light fa-'+(st==="approved"?"circle-check":"circle-xmark")+'"></i>'+(st==="approved"?"დადასტურებულია":"უარყოფილია")+"</span>"+
+      '<button class="btn sm" data-undo="'+r.id+'" data-log="დასტური: გაუქმება ('+BY[r.who].n+')"><i class="fa-light fa-rotate-left"></i>გაუქმება</button>';
+    return '<div class="req sk" data-who="'+r.who+'" data-log="მოთხოვნის ბარათი: '+BY[r.who].n+'" style="cursor:pointer"><div class="ic"><i class="fa-light '+r.ic+'"></i></div>'+
+      '<div><div class="t">'+r.t+'</div><div class="d">'+r.d+'</div><div class="d">'+r.sub+'</div></div><div class="ra">'+right+"</div></div>";
+  }).join("");
+  document.getElementById("navCnt").textContent=pend; document.getElementById("navCnt").style.display=pend?"":"none";
+  var e=BY[balWho], b=BAL[balWho], sickUsed=b.sick+(balWho==="tea"&&S.leave.tea==="approved"?3:0), annUsed=b.ann[1]+(balWho==="lika"&&S.leave.lika==="approved"?5:0);
+  var fl=S.flash===balWho?" flash":"";
+  document.getElementById("balCard").innerHTML='<div class="who"><div class="ava">'+e.n.charAt(0)+'</div><div><b>'+e.n+'</b><div class="d" style="font-size:13px;color:var(--ink2)">'+e.r+" · ქირურგიული</div></div></div>"+
+    '<h3 style="margin:6px 0 6px;font-size:15px"><i class="fa-light fa-scale-balanced"></i> ბალანსები 2026</h3><table class="bal">'+
+    '<tr class="'+(balWho==="lika"?fl.trim():"")+'"><td>ყოველწლიური შვებულება: დარჩენილი</td><td>'+(b.ann[0]-annUsed)+" / "+b.ann[0]+" დღე</td></tr>"+
+    "<tr><td>ყოველწლიური: გამოყენებული</td><td>"+annUsed+" დღე</td></tr>"+
+    '<tr class="'+(balWho==="tea"?fl.trim():"")+'"><td>ავადმყოფობა: გამოყენებული</td><td>'+sickUsed+" დღე</td></tr>"+
+    "<tr><td>უხელფასო შვებულება</td><td>0 დღე</td></tr></table>";
+  S.flash=null;
+}
+document.getElementById("reqList").addEventListener("click",function(ev){
+  var b=ev.target.closest("button"), card=ev.target.closest(".req");
+  if(card)balWho=card.getAttribute("data-who");
+  if(b){
+    var id=b.getAttribute("data-ap")||b.getAttribute("data-rj")||b.getAttribute("data-undo"), r=REQ.filter(function(x){return x.id===id;})[0];
+    if(b.hasAttribute("data-ap")){S.leave[id]="approved";S.flash=id;audit(r.t+" ("+BY[r.who].n+"): დადასტურდა");log("მოქმედება: დადასტურდა "+r.t+" "+BY[r.who].n,true);toast('<i class="fa-light fa-circle-check"></i>დადასტურებულია');}
+    if(b.hasAttribute("data-rj")){S.leave[id]="rejected";audit(r.t+" ("+BY[r.who].n+"): უარყოფილია");log("მოქმედება: უარყო "+r.t+" "+BY[r.who].n,true);}
+    if(b.hasAttribute("data-undo")){S.leave[id]="pending";audit(r.t+" ("+BY[r.who].n+"): გადაწყვეტილება გაუქმდა");log("მოქმედება: გააუქმა გადაწყვეტილება "+BY[r.who].n,true);}
+  }
+  renderApprovals(); drawLog();
+});
+
+/* ---------- 3 attendance grading ---------- */
+function onSick(eid,d){return S.leave.tea==="approved"&&eid===SICK.emp&&d>=SICK.from&&d<=SICK.to;}
+function grade(eid,d){
+  var s=S.roster[eid][d], f=FACT[eid][d], k=eid+"-"+d;
+  if(onSick(eid,d))return {k:"sick",l:"ავ"};
+  if(s&&f&&s===f){
+    if(LATE[k])return {k:"late",l:SH[s].l,x:true};
+    if(S.added[k])return {k:"swap",l:SH[s].l};
+    return {k:"ok",l:SH[s].l};
+  }
+  if(s&&f)return {k:"uns",l:"≠",bad:true};
+  if(s&&!f)return {k:"abs",l:'<i class="fa-solid fa-xmark"></i>',bad:true};
+  if(!s&&f)return {k:"uns",l:'<i class="fa-solid fa-exclamation"></i>',bad:true};
+  if(S.moved[k])return {k:"out",l:'<i class="fa-light fa-arrow-right-arrow-left"></i>'};
+  return {k:"",l:""};
+}
+function stats(eid){
+  var e=BY[eid],w=0,nh=0,sch=0,sick=0,abs=0,bad=0,normDays=22;
+  for(var d=1;d<=DAYS;d++){
+    var f=FACT[eid][d],s=S.roster[eid][d],g=grade(eid,d);
+    if(f){w+=SH[f].h;nh+=SH[f].nh;}
+    if(s)sch+=SH[s].h;
+    if(g.k==="sick"){sick++;if(!isWe(d))normDays--;}
+    if(g.k==="abs")abs++;
+    if(g.bad)bad++;
+  }
+  var norm=normDays*8, ot=Math.max(0,w-norm);
+  return {w:w,nh:nh,sch:sch,sick:sick,abs:abs,bad:bad,norm:norm,ot:ot,pay:w+nh*0.5+ot*0.5};
+}
+function exceptions(){
+  var out=[];
+  EMP.forEach(function(e){for(var d=1;d<=DAYS;d++){var g=grade(e.id,d),s=S.roster[e.id][d],f=FACT[e.id][d],k=e.id+"-"+d,txt=null,cls="";
+    if(g.k==="swap"){txt=SH[s].nm+" ("+SH[s].t+"), გადანიშნულია (ადრე: "+(BY[S.added[k]]?BY[S.added[k]].n:"")+")"; if(S.added[k]==="new")txt=SH[s].nm+", დამატებულია გრაფიკში";txt+=" · მოვიდა "+inTime(e.id,d,s);cls="swap";}
+    else if(g.k==="out"){txt="ცვლა გადაეცა: "+BY[S.moved[k]].n;cls="out";}
+    else if(g.k==="sick"&&d===SICK.from){txt="ავადმყოფობა 20-22 ოქტ (3 დღე), დადასტურებული";cls="sick";}
+    else if(g.k==="late"){txt="დაგვიანება "+LATE[k]+" წთ ("+SH[s].nm+")";cls="late";}
+    else if(g.k==="abs"){txt="გრაფიკით "+SH[s].nm+", არ გამოცხადდა, მიზეზი არ არის";cls="abs";}
+    else if(g.k==="uns"){txt="იმუშავა "+SH[f].nm+" ("+inTime(e.id,d,f)+"-დან), გრაფიკში "+(s?SH[s].nm+" წერია":"ცვლა არ აქვს");cls="uns";}
+    if(txt)out.push({d:d,e:e,t:txt,c:cls,bad:!!g.bad});
+  }});
+  return out.sort(function(a,b){return a.d-b.d;});
+}
+function renderAttendance(){
+  var h=head('<th class="tot">გრაფ.</th><th class="tot">ფაქტი</th>');
+  var badT=0,sickT=0,ex=exceptions();
+  EMP.forEach(function(e){
+    var st=stats(e.id);badT+=st.bad;sickT+=st.sick;
+    h+='<tr><td class="nm">'+e.n+"<small>"+e.r+"</small></td>";
+    for(var d=1;d<=DAYS;d++){var g=grade(e.id,d);
+      h+='<td class="'+(isWe(d)?"we":"")+'" data-log="დასწრების უჯრა: '+e.n+", "+d+' ოქტ"><span class="a '+g.k+'">'+g.l+"</span></td>";}
+    h+='<td class="tot">'+st.sch+'</td><td class="tot">'+st.w+"</td></tr>";
+  });
+  document.getElementById("attGrid").innerHTML=h;
+  document.getElementById("attSum").innerHTML=
+    '<div class="kpi sk"><b>6</b><span>თანამშრომელი</span></div>'+
+    '<div class="kpi sk"><b>'+ex.length+'</b><span>გამონაკლისი</span></div>'+
+    '<div class="kpi sk'+(badT?" red":"")+'"><b>'+badT+'</b><span>შეუსაბამობა გრაფიკთან</span></div>'+
+    '<div class="kpi sk"><b>'+sickT+'</b><span>ავადმყოფობის დღე</span></div>';
+  document.getElementById("exList").innerHTML=ex.map(function(x){
+    var tag={swap:["ok","fa-arrow-right-arrow-left","გადანიშნული"],out:["ok","fa-arrow-right-arrow-left","გადანიშნული"],sick:["ok","fa-bed-pulse","შვებულება"],
+      late:["wait","fa-clock","დაგვიანება"],abs:["no","fa-triangle-exclamation","შეუსაბამობა"],uns:["no","fa-triangle-exclamation","შეუსაბამობა"]}[x.c];
+    return '<li data-log="გამონაკლისი: '+x.d+" ოქტ, "+x.e.n+'"><b>'+x.d+" ოქტ ("+WD[wd(x.d)]+")</b><span>"+x.e.n+"</span><span>"+x.t+'</span><span class="st '+tag[0]+'"><i class="fa-light '+tag[1]+'"></i>'+tag[2]+"</span></li>";
+  }).join("");
+}
+
+/* ---------- 4 overtime ---------- */
+function renderOvertime(){
+  var h="<thead><tr><th>თანამშრომელი</th><th>ნამუშევარი<br>სთ</th><th>ნორმა<br>სთ</th><th>ღამის<br>სთ</th><th>ღამის დანამატი<br>(×1.5, სთ ეკვ.)</th><th>ზეგანაკვეთური<br>სთ</th><th>ზეგანაკვ. დანამატი<br>(×1.5, სთ ეკვ.)</th><th>ანაზღაურებადი<br>სთ ეკვ.</th><th>შენიშვნა</th></tr></thead><tbody>";
+  var T={w:0,nh:0,ot:0,pay:0};
+  EMP.forEach(function(e){var s=stats(e.id);T.w+=s.w;T.nh+=s.nh;T.ot+=s.ot;T.pay+=s.pay;
+    h+='<tr data-log="ზეგანაკვეთურის რიგი: '+e.n+'"><td>'+e.n+"</td><td>"+s.w+"</td><td>"+s.norm+"</td><td>"+s.nh+'</td><td><span class="hl">+'+(s.nh*0.5)+"</span></td><td>"+s.ot+'</td><td><span class="hl">+'+(s.ot*0.5)+"</span></td><td><b>"+s.pay+"</b></td><td>"+
+      (s.bad?'<span class="flag"><i class="fa-light fa-triangle-exclamation"></i> '+s.bad+" შეუსაბამობა</span>":(s.sick?'<span style="color:var(--sick)">ავადმყოფობა '+s.sick+" დღე</span>":""))+"</td></tr>";});
+  h+="</tbody><tfoot><tr><td>სულ</td><td>"+T.w+"</td><td></td><td>"+T.nh+"</td><td>+"+(T.nh*0.5)+"</td><td>"+T.ot+"</td><td>+"+(T.ot*0.5)+"</td><td>"+T.pay+"</td><td></td></tr></tfoot>";
+  document.getElementById("otTable").innerHTML=h;
+}
+
+/* ---------- 5 export ---------- */
+function renderExport(){
+  document.querySelectorAll("#fmt button").forEach(function(b){b.classList.toggle("on",b.getAttribute("data-fmt")===S.fmt);});
+  document.getElementById("expLbl").textContent=S.fmt.toUpperCase()+" ჩამოტვირთვა";
+  document.querySelector("#expBtn i").className="fa-solid "+(S.fmt==="xlsx"?"fa-file-excel":"fa-file-csv");
+  var bad=0,ex=exceptions().length;EMP.forEach(function(e){bad+=stats(e.id).bad;});
+  document.getElementById("expInfo").innerHTML='<i class="fa-light fa-circle-info"></i><span>6 თანამშრომელი · '+ex+" გამონაკლისი · "+bad+" შეუსაბამობა გრაფიკთან</span>";
+  var f=S.exported;
+  document.getElementById("fileOut").innerHTML=f?'<div class="file sk"><i class="fa-solid '+(f.fmt==="xlsx"?"fa-file-excel":"fa-file-csv")+' big"></i><div><b>'+f.name+'</b><div style="font-size:13px;color:var(--ink2)">'+f.size+" · ჩამოიტვირთა "+f.t+'</div><div style="font-size:13px">ფაილი მზადაა ბუღალტრისთვის გასაგზავნად.</div></div></div>':"";
+  document.getElementById("audit").innerHTML=S.audit.length?S.audit.map(function(a){return '<li><span>'+a.t+"</span><span>"+a.w+"</span><span>"+esc(a.m)+'</span><span class="h" style="grid-column:2/-1">#'+a.h+"</span></li>";}).join(""):
+    '<li><span></span><span style="color:var(--ink2)">ამ სესიაში ცვლილება ჯერ არ არის</span></li>';
+}
+document.getElementById("fmt").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;S.fmt=b.getAttribute("data-fmt");renderExport();});
+document.getElementById("expBtn").addEventListener("click",function(){
+  var btn=this; btn.disabled=true; var p=document.getElementById("prog"); p.style.display="block"; var bar=p.firstElementChild; bar.style.width="0";
+  requestAnimationFrame(function(){bar.style.width="100%";});
+  setTimeout(function(){
+    var d=new Date();
+    S.exported={fmt:S.fmt,name:"tabeli_qirurgiuli_2026-10."+S.fmt,size:S.fmt==="xlsx"?"18 KB":"6 KB",t:pad(d.getHours())+":"+pad(d.getMinutes())};
+    audit("ტაბელის ექსპორტი ("+S.fmt.toUpperCase()+"), ოქტომბერი 2026, ქირურგიული");
+    log("მოქმედება: ტაბელი ექსპორტირდა "+S.fmt.toUpperCase(),true);
+    btn.disabled=false; p.style.display="none"; renderExport(); drawLog();
+    toast('<i class="fa-solid fa-file-arrow-down"></i>'+S.exported.name+" ჩამოიტვირთა");
+  },1000);
+});
+
+/* ---------- render ---------- */
+function render(){
+  if(S.screen==="roster")renderRoster();
+  if(S.screen==="approvals")renderApprovals();
+  if(S.screen==="attendance")renderAttendance();
+  if(S.screen==="overtime")renderOvertime();
+  if(S.screen==="export")renderExport();
+  var pend=0;for(var k in S.leave)if(S.leave[k]==="pending")pend++;
+  var c=document.getElementById("navCnt");c.textContent=pend;c.style.display=pend?"":"none";
+  drawLog();
+}
+
+/* ---------- task card + keys ---------- */
+var task=document.getElementById("task");
+document.getElementById("taskHead").addEventListener("click",function(e){
+  if(e.target.closest("#taskHide"))return;
+  task.classList.toggle("col");
+  document.getElementById("taskChev").className="fa-light fa-chevron-"+(task.classList.contains("col")?"up":"down");
+});
+document.getElementById("taskHide").addEventListener("click",function(){task.classList.add("hidden");log("ამოცანის ბარათი დაიმალა",true);});
+document.getElementById("logX").addEventListener("click",function(){document.getElementById("log").classList.remove("on");});
+document.getElementById("logClr").addEventListener("click",function(){LOG=[];t0=Date.now();log("ჟურნალი გასუფთავდა",true);});
+document.getElementById("logDl").addEventListener("click",function(){
+  var txt=LOG.map(function(x){return x.t+" "+x.e+" "+x.m;}).join("\n");
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([txt],{type:"text/plain"}));
+  a.download="test-log-"+new Date().toISOString().slice(0,16).replace(/[:T]/g,"-")+".txt";document.body.appendChild(a);a.click();a.remove();
+});
+document.addEventListener("keydown",function(e){
+  if(e.ctrlKey||e.metaKey||e.altKey)return;
+  var tg=e.target.tagName; if(tg==="INPUT"||tg==="TEXTAREA"||tg==="SELECT")return;
+  var k=({KeyL:"l",KeyR:"r",KeyT:"t"})[e.code]||e.key.toLowerCase();
+  if(k==="l"){document.getElementById("log").classList.toggle("on");drawLog();}
+  else if(k==="r"){S=fresh();balWho="tea";t0=Date.now();task.classList.remove("hidden","col");document.getElementById("taskChev").className="fa-light fa-chevron-down";
+    log("──── R: მდგომარეობა გადაიტვირთა, ახალი სესია ────",true);go("roster");}
+  else if(k==="t"){task.classList.toggle("hidden");}
+  else if(k==="escape")closePop();
+});
+window.__proto={state:function(){return S;},log:function(){return LOG;}};
+log("სესია დაიწყო",true);
+go("roster");
+})();
+</script>
+</body>
+</html>
