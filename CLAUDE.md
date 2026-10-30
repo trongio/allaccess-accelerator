@@ -44,7 +44,7 @@ allaccess/
 
 ## Font Awesome
 
-Font Awesome Pro 7.3.1 lives in `vendor/fontawesome` (commercial license). It is **not committed to git yet**, pending the owner's decision, so pages that use it (navigator, prototype, poster) need the local folder present. Do not commit it without the owner's go-ahead.
+Font Awesome Pro 7.3.1 lives in `vendor/fontawesome` (commercial license). It is committed to this private repo for the owner's personal use only (owner decision 2026-10-30). Never make the repo public or publish pages that bundle it.
 
 ## Product context
 
