@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALL access · CUnicorn</title>
+<meta name="description" content="Local navigator for the ALL access CUnicorn accelerator work: deliverables, interviews, course materials.">
+<script>
+  // Apply the theme before first paint.
+  (function () {
+    var t = null;
+    try { t = localStorage.getItem('aa-theme'); } catch (e) {}
+    if (!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.classList.toggle('dark', t === 'dark');
+    document.documentElement.dataset.theme = t;
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="vendor/fontawesome/css/all.css">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: { sans: ['"Noto Sans Georgian"', 'system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'] },
+        colors: {
+          accent: { 50: '#eef7f6', 100: '#d5ecea', 200: '#acd9d4', 400: '#4fa9a0', 500: '#2f8e85', 600: '#23736c', 700: '#1d5d58', 900: '#123b38' }
+        }
+      }
+    }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="site-data.js"></script>
+<style>
+  :root { --bg: #f7f7f5; --panel: #ffffff; --ink: #1f2933; --muted: #5f6b76; --line: #e3e5e8; --code: #f1f3f4; --mark: #fde68a; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #12161a; --panel: #181d22; --ink: #e4e7ea; --muted: #9aa5af; --line: #2a3138; --code: #20262c; --mark: #a16207; }
+  }
+  :root[data-theme="dark"] { --bg: #12161a; --panel: #181d22; --ink: #e4e7ea; --muted: #9aa5af; --line: #2a3138; --code: #20262c; --mark: #a16207; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body { font-family: "Noto Sans Georgian", system-ui, -apple-system, "Segoe UI", sans-serif; overflow-x: hidden; }
+  [x-cloak] { display: none !important; }
+  mark { background: var(--mark); color: inherit; border-radius: 2px; padding: 0 1px; }
+
+  /* Rendered markdown */
+  .md { line-height: 1.75; font-size: 1rem; overflow-wrap: break-word; }
+  .md > *:first-child { margin-top: 0; }
+  .md h1 { font-size: 1.75rem; line-height: 1.3; font-weight: 700; margin: 0 0 1.25rem; letter-spacing: -0.01em; }
+  .md h2 { font-size: 1.3rem; line-height: 1.35; font-weight: 650; margin: 2.25rem 0 0.75rem; padding-bottom: 0.35rem; border-bottom: 1px solid var(--line); scroll-margin-top: 5rem; }
+  .md h3 { font-size: 1.08rem; font-weight: 650; margin: 1.6rem 0 0.5rem; scroll-margin-top: 5rem; }
+  .md h4 { font-weight: 650; margin: 1.2rem 0 0.4rem; }
+  .md p, .md ul, .md ol, .md blockquote, .md pre, .md .tbl { margin: 0.8rem 0; }
+  .md ul { list-style: disc; padding-left: 1.4rem; }
+  .md ol { list-style: decimal; padding-left: 1.4rem; }
+  .md li { margin: 0.25rem 0; }
+  .md li > ul, .md li > ol { margin: 0.25rem 0; }
+  .md a { color: #23736c; text-decoration: underline; text-underline-offset: 2px; text-decoration-thickness: 1px; }
+  .dark .md a { color: #6cc3b9; }
+  .md strong { font-weight: 650; }
+  .md hr { border: 0; border-top: 1px solid var(--line); margin: 2rem 0; }
+  .md blockquote { border-left: 3px solid #4fa9a0; background: color-mix(in srgb, #4fa9a0 8%, transparent); padding: 0.6rem 1rem; border-radius: 0 6px 6px 0; color: var(--ink); }
+  .md blockquote p { margin: 0.35rem 0; }
+  .md code { font-family: ui-monospace, "JetBrains Mono", Menlo, monospace; font-size: 0.86em; background: var(--code); padding: 0.1rem 0.35rem; border-radius: 4px; overflow-wrap: anywhere; }
+  .md code.doc-link { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
+  .md pre { background: var(--code); padding: 0.9rem 1rem; border-radius: 8px; overflow-x: auto; line-height: 1.45; border: 1px solid var(--line); }
+  .md pre code { background: none; padding: 0; font-size: 0.82rem; overflow-wrap: normal; white-space: pre; }
+  .md img { max-width: 100%; height: auto; border-radius: 6px; }
+  .md input[type=checkbox] { margin-right: 0.4rem; transform: translateY(1px); }
+  .md .tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; max-width: 100%; }
+  .md table { border-collapse: collapse; width: 100%; font-size: 0.9rem; line-height: 1.5; }
+  .md th { text-align: left; font-weight: 600; background: var(--code); }
+  .md th { overflow-wrap: break-word !important; }
+  .md th, .md td { padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: anywhere; word-break: normal; min-width: 5.5rem; }
+  .md td + td, .md th + th { border-left: 1px solid var(--line); }
+  .md tbody tr:last-child td { border-bottom: 0; }
+  .md tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--code) 55%, transparent); }
+  .md .sim { background: #fde68a; color: #713f12; border-radius: 3px; padding: 0 3px; font-weight: 600; }
+  .dark .md .sim { background: #854d0e; color: #fef3c7; }
+  .plain { white-space: pre-wrap; overflow-wrap: anywhere; font-family: ui-monospace, Menlo, monospace; font-size: 0.85rem; line-height: 1.6; }
+  .scroll-thin { scrollbar-width: thin; }
+  @media (max-width: 767px) { .md th, .md td { min-width: 7rem; } }
+</style>
+</head>
+<body class="min-h-screen antialiased">
+<div x-data="nav()" x-init="init()" @keydown.window="onKey($event)" @hashchange.window="fromHash()" class="min-h-screen">
+
+  <!-- Top bar -->
+  <header class="sticky top-0 z-30 h-14 border-b border-[color:var(--line)] bg-[color:var(--panel)]/95 backdrop-blur flex items-center gap-2 px-3 md:px-5">
+    <button class="md:hidden p-2 -ml-1 rounded hover:bg-black/5 dark:hover:bg-white/10" @click="drawer = !drawer" aria-label="მენიუ">
+      <i class="fa-solid fa-bars text-lg"></i>
+    </button>
+    <a href="#home" class="flex items-center gap-2 shrink-0 font-semibold tracking-tight" @click.prevent="goHome()">
+      <span class="inline-grid place-items-center w-7 h-7 rounded-md bg-accent-600 text-white text-xs font-bold">AA</span>
+      <span class="hidden sm:inline">ALL access <span class="text-[color:var(--muted)] font-normal">· CUnicorn</span></span>
+    </a>
+
+    <!-- Search -->
+    <div class="relative flex-1 min-w-0 max-w-xl mx-auto" @click.outside="searchOpen = false">
+      <div class="flex items-center gap-2 h-9 px-3 rounded-lg border border-[color:var(--line)] bg-[color:var(--bg)] focus-within:ring-2 focus-within:ring-accent-400">
+        <i class="fa-solid fa-magnifying-glass text-sm opacity-60 shrink-0"></i>
+        <input x-ref="search" x-model="query" @input.debounce.120ms="runSearch()" @focus="searchOpen = query.length > 0"
+               @keydown.down.prevent="moveSel(1)" @keydown.up.prevent="moveSel(-1)" @keydown.enter.prevent="openSel()" @keydown.escape="searchOpen=false; $refs.search.blur()"
+               type="search" placeholder="ძებნა..." class="w-full min-w-0 bg-transparent outline-none text-sm" aria-label="ძებნა">
+        <kbd class="hidden sm:inline text-[11px] px-1.5 py-0.5 rounded border border-[color:var(--line)] text-[color:var(--muted)]">/</kbd>
+      </div>
+      <div x-show="searchOpen" x-cloak class="fixed left-2 right-2 top-14 sm:absolute sm:left-0 sm:right-0 sm:top-auto mt-1 max-h-[70vh] overflow-y-auto scroll-thin rounded-lg border border-[color:var(--line)] bg-[color:var(--panel)] shadow-xl z-50">
+        <template x-if="results.length === 0">
+          <div class="p-4 text-sm text-[color:var(--muted)]">შედეგი არ არის</div>
+        </template>
+        <div class="px-3 pt-2 pb-1 text-[11px] uppercase tracking-wide text-[color:var(--muted)]" x-show="results.length" x-text="results.length + (results.length >= 40 ? '+' : '') + ' შედეგი'"></div>
+        <template x-for="(r, i) in results" :key="r.path">
+          <button class="block w-full text-left px-3 py-2 border-t border-[color:var(--line)] first:border-t-0"
+                  :class="i === sel ? 'bg-accent-50 dark:bg-accent-900/40' : 'hover:bg-black/[.03] dark:hover:bg-white/5'"
+                  @mouseenter="sel = i" @click="open(r.path); searchOpen=false">
+            <div class="flex items-center gap-2 text-sm font-medium min-w-0">
+              <span class="truncate" x-html="r.titleHtml"></span>
+              <span x-show="r.count" class="ml-auto shrink-0 text-[11px] text-[color:var(--muted)]" x-text="r.count + '×'"></span>
+            </div>
+            <div class="text-[11px] text-[color:var(--muted)] truncate" x-text="r.path"></div>
+            <div class="text-xs mt-1 text-[color:var(--muted)] leading-relaxed [overflow-wrap:anywhere]" x-show="r.snippet" x-html="r.snippet"></div>
+          </button>
+        </template>
+      </div>
+    </div>
+
+    <button class="p-2 rounded hover:bg-black/5 dark:hover:bg-white/10 text-sm font-semibold w-9" @click="help = !help" aria-label="კლავიატურის მალსახმობები" title="მალსახმობები (?)"><i class="fa-regular fa-circle-question text-[17px]"></i></button>
+    <button class="p-2 rounded hover:bg-black/5 dark:hover:bg-white/10" @click="toggleTheme()" :aria-label="dark ? 'ნათელი თემა' : 'მუქი თემა'" :title="dark ? 'ნათელი თემა' : 'მუქი თემა'">
+      <i x-show="!dark" class="fa-duotone fa-moon text-[17px]"></i>
+      <i x-show="dark" x-cloak class="fa-duotone fa-sun-bright text-[17px]"></i>
+    </button>
+
+    <!-- Help popover -->
+    <div x-show="help" x-cloak @click.outside="help=false" x-transition.opacity
+         class="absolute right-3 top-14 mt-1 w-72 max-w-[calc(100vw-1.5rem)] rounded-lg border border-[color:var(--line)] bg-[color:var(--panel)] shadow-xl p-4 text-sm z-50">
+      <div class="font-semibold mb-2"><i class="fa-regular fa-keyboard mr-2"></i>კლავიატურა</div>
+      <dl class="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5">
+        <dt><kbd class="kbd">/</kbd></dt><dd>ძებნა</dd>
+        <dt><kbd class="kbd">j</kbd> <kbd class="kbd">k</kbd></dt><dd>შემდეგი / წინა დოკუმენტი</dd>
+        <dt><kbd class="kbd">g</kbd> <kbd class="kbd">h</kbd></dt><dd>მთავარი გვერდი</dd>
+        <dt><kbd class="kbd">t</kbd></dt><dd>თემის შეცვლა</dd>
+        <dt><kbd class="kbd">?</kbd></dt><dd>ეს დახმარება</dd>
+        <dt><kbd class="kbd">Esc</kbd></dt><dd>დახურვა</dd>
+      </dl>
+    </div>
+  </header>
+
+  <div class="flex">
+    <!-- Drawer overlay -->
+    <div x-show="drawer" x-cloak x-transition.opacity class="fixed inset-0 z-30 bg-black/40 md:hidden" @click="drawer=false"></div>
+
+    <!-- Sidebar -->
+    <div class="md:w-[18rem] md:shrink-0 md:border-r md:border-[color:var(--line)] md:bg-[color:var(--panel)]">
+    <aside class="fixed md:sticky top-0 md:top-14 left-0 z-40 md:z-10 h-screen md:h-[calc(100vh-3.5rem)] w-[18rem] max-w-[85vw] md:max-w-none shrink-0 overflow-y-auto overscroll-contain scroll-thin border-r md:border-r-0 border-[color:var(--line)] bg-[color:var(--panel)] transition-transform duration-200 md:translate-x-0"
+           :class="drawer ? 'translate-x-0 shadow-2xl' : '-translate-x-full'">
+      <div class="md:hidden flex items-center justify-between h-14 px-4 border-b border-[color:var(--line)]">
+        <span class="font-semibold">ALL access · CUnicorn</span>
+        <button class="p-2" @click="drawer=false" aria-label="დახურვა"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+      <nav class="p-3 text-sm">
+        <button @click="goHome()" class="w-full flex items-center gap-2 px-2 py-1.5 rounded-md mb-2"
+                :class="!current ? 'bg-accent-50 text-accent-700 dark:bg-accent-900/50 dark:text-accent-100 font-medium' : 'hover:bg-black/[.04] dark:hover:bg-white/5'">
+          <i class="fa-duotone fa-gauge-high w-4 text-center"></i>
+          დაფა
+        </button>
+        <template x-for="sec in tree" :key="sec.id">
+          <div class="mb-1">
+            <button class="w-full flex items-center gap-1.5 px-2 py-1.5 rounded-md hover:bg-black/[.04] dark:hover:bg-white/5 text-[13px] font-semibold"
+                    @click="toggleSec(sec.id)" :aria-expanded="isOpen(sec.id)">
+              <i class="fa-solid fa-chevron-right text-[9px] w-3 opacity-60 transition-transform" :class="isOpen(sec.id) ? 'rotate-90' : ''"></i><i class="fa-duotone w-4 text-center text-accent-600 dark:text-accent-400" :class="secIcon(sec.id)"></i>
+              <span class="text-left" x-text="sec.label"></span>
+              <span class="ml-auto text-[11px] font-normal text-[color:var(--muted)] tabular-nums" x-text="sec.count"></span>
+            </button>
+            <div x-show="isOpen(sec.id)" class="ml-3 pl-2 border-l border-[color:var(--line)]">
+              <template x-for="grp in sec.groups" :key="sec.id + '/' + (grp.id || '')">
+                <div>
+                  <div x-show="grp.label" class="px-2 pt-2 pb-0.5 text-[11px] uppercase tracking-wide text-[color:var(--muted)] flex">
+                    <span x-text="grp.label"></span><span class="ml-auto tabular-nums" x-text="grp.files.length"></span>
+                  </div>
+                  <template x-for="f in grp.files" :key="f.path">
+                    <a :href="'#doc=' + encodeURI(f.path)" @click.prevent="open(f.path)"
+                       class="flex items-start gap-2 px-2 py-1 rounded-md leading-snug"
+                       :class="current && current.path === f.path ? 'bg-accent-50 text-accent-700 dark:bg-accent-900/50 dark:text-accent-100 font-medium' : 'hover:bg-black/[.04] dark:hover:bg-white/5'"
+                       :title="f.path">
+                      <i class="mt-[3px] shrink-0 w-4 text-center text-[color:var(--muted)]" :class="fileIcon(f)" :title="f.ext"></i>
+                      <span class="min-w-0 line-clamp-2 [overflow-wrap:anywhere]" x-text="navLabel(f)"></span>
+                      <i x-show="f.simulated" class="fa-solid fa-flask mt-[4px] ml-auto shrink-0 text-[11px] text-amber-500" title="სიმულაცია"></i>
+                    </a>
+                  </template>
+                </div>
+              </template>
+            </div>
+          </div>
+        </template>
+      </nav>
+    </aside>
+    </div>
+
+    <!-- Main -->
+    <main class="flex-1 min-w-0">
+      <!-- Dashboard -->
+      <section x-show="!current" class="max-w-5xl mx-auto px-4 md:px-8 py-6 md:py-10">
+        <h1 class="text-2xl md:text-3xl font-bold tracking-tight">ALL access · CUnicorn</h1>
+        <p class="mt-1 text-[color:var(--muted)]">Pre-acceleration სამუშაო ფაილები: დავალებები, ინტერვიუები, კურსის მასალები.</p>
+
+        <div class="mt-6 rounded-xl border border-amber-300 bg-amber-50 text-amber-950 dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-100 p-4 md:p-5 flex gap-3">
+          <i class="fa-duotone fa-triangle-exclamation text-xl shrink-0 mt-0.5"></i>
+          <div class="min-w-0">
+            <div class="font-semibold">ყურადღება: <span class="inline-block px-1.5 rounded bg-amber-300 text-amber-950 dark:bg-amber-600 dark:text-white">სიმულაცია</span> ნიშნით მონიშნული მასალა ჯერ არ ითვლება</div>
+            <p class="mt-1 text-sm leading-relaxed">კურსის წესით ციტატა, ფოტო ან რიცხვი რეალური ინტერვიუს გარეშე არ ჩაითვლება. ყველა <span class="font-semibold">სიმულაცია</span> ნიშნიანი ელემენტი (ინტერვიუები, ტესტები, პოსტერის შედეგები) ჩაბარებამდე უნდა გაიმეოროთ რეალურ ადამიანებთან და ჩაანაცვლოთ რეალური მონაცემებით.
+              <template x-if="simCount"><span>ახლა მონიშნულია <b x-text="simCount"></b> ფაილი.</span></template></p>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <template x-for="s in stats" :key="s.label">
+            <div class="rounded-xl border border-[color:var(--line)] bg-[color:var(--panel)] p-4">
+              <div class="flex items-center gap-2"><i class="fa-duotone text-accent-600 dark:text-accent-400" :class="s.icon"></i><span class="text-2xl font-semibold tabular-nums" x-text="s.value"></span></div>
+              <div class="text-xs text-[color:var(--muted)] mt-0.5" x-text="s.label"></div>
+            </div>
+          </template>
+        </div>
+
+        <div class="mt-6 grid lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] gap-6">
+          <!-- Checklist -->
+          <div class="rounded-xl border border-[color:var(--line)] bg-[color:var(--panel)]">
+            <div class="flex items-center gap-3 px-4 md:px-5 py-4 border-b border-[color:var(--line)]">
+              <h2 class="font-semibold"><i class="fa-duotone fa-list-check mr-2 text-accent-600 dark:text-accent-400"></i>კურსის დავალებები</h2>
+              <span class="ml-auto text-sm text-[color:var(--muted)] tabular-nums" x-text="doneCount + ' / ' + tasks.length"></span>
+            </div>
+            <div class="px-4 md:px-5 pt-3">
+              <div class="h-2 rounded-full bg-[color:var(--code)] overflow-hidden"><div class="h-full bg-accent-500 rounded-full transition-all" :style="'width:' + Math.round(100*doneCount/tasks.length) + '%'"></div></div>
+            </div>
+            <ul class="p-2 md:p-3">
+              <template x-for="t in tasks" :key="t.id">
+                <li class="flex items-start gap-3 px-2 py-2 rounded-lg hover:bg-black/[.025] dark:hover:bg-white/[.03]">
+                  <i class="mt-0.5 shrink-0 text-lg w-5 text-center" :class="t.done ? 'fa-solid fa-circle-check text-accent-500' : 'fa-regular fa-circle text-[color:var(--muted)] opacity-60'"></i>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <span class="text-sm" :class="t.done ? '' : 'text-[color:var(--muted)]'" x-text="t.label"></span>
+                      <span class="text-[10px] px-1.5 py-px rounded border border-[color:var(--line)] text-[color:var(--muted)]" x-text="t.week"></span>
+                      <span x-show="t.progress" class="text-[11px] tabular-nums text-[color:var(--muted)]" x-text="t.progress"></span>
+                      <span x-show="t.simulated" class="text-[10px] font-semibold px-1.5 py-px rounded bg-amber-200 text-amber-900 dark:bg-amber-700 dark:text-amber-50"><i class="fa-solid fa-flask mr-0.5"></i>სიმულაცია</span>
+                      <span x-show="!t.done" class="text-[10px] px-1.5 py-px rounded bg-[color:var(--code)] text-[color:var(--muted)]">აკლია</span>
+                    </div>
+                    <div x-show="t.files.length" class="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5">
+                      <template x-for="f in t.files.slice(0, 4)" :key="f.path">
+                        <a :href="'#doc=' + encodeURI(f.path)" @click.prevent="open(f.path)" class="text-xs text-accent-600 dark:text-accent-400 hover:underline [overflow-wrap:anywhere]" x-text="f.name"></a>
+                      </template>
+                      <span x-show="t.files.length > 4" class="text-xs text-[color:var(--muted)]" x-text="'+' + (t.files.length - 4)"></span>
+                    </div>
+                  </div>
+                </li>
+              </template>
+            </ul>
+          </div>
+
+          <div class="space-y-6 min-w-0">
+            <!-- Quick links -->
+            <div class="rounded-xl border border-[color:var(--line)] bg-[color:var(--panel)]">
+              <h2 class="font-semibold px-4 md:px-5 py-4 border-b border-[color:var(--line)]"><i class="fa-duotone fa-bolt mr-2 text-accent-600 dark:text-accent-400"></i>სწრაფი ბმულები</h2>
+              <ul class="p-2 md:p-3">
+                <template x-for="q in quick" :key="q.path">
+                  <li><a :href="'#doc=' + encodeURI(q.path)" @click.prevent="open(q.path)" class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-black/[.03] dark:hover:bg-white/5 text-sm">
+                    <i class="w-4 text-center text-[color:var(--muted)]" :class="fileIcon(q)"></i><span class="min-w-0 truncate" x-text="q.label"></span>
+                    <span class="ml-auto text-[10px] uppercase text-[color:var(--muted)]" x-text="q.ext"></span>
+                  </a></li>
+                </template>
+              </ul>
+            </div>
+            <!-- Recent -->
+            <div class="rounded-xl border border-[color:var(--line)] bg-[color:var(--panel)]">
+              <h2 class="font-semibold px-4 md:px-5 py-4 border-b border-[color:var(--line)]"><i class="fa-duotone fa-clock-rotate-left mr-2 text-accent-600 dark:text-accent-400"></i>ბოლოს შეცვლილი</h2>
+              <ul class="p-2 md:p-3">
+                <template x-for="f in recent" :key="f.path">
+                  <li><a :href="'#doc=' + encodeURI(f.path)" @click.prevent="open(f.path)" class="block px-2 py-1.5 rounded-lg hover:bg-black/[.03] dark:hover:bg-white/5">
+                    <div class="text-sm truncate" x-text="f.title"></div>
+                    <div class="text-[11px] text-[color:var(--muted)]" x-text="fmtDate(f.mtime) + ' · ' + f.path.split('/').slice(-2).join('/')"></div>
+                  </a></li>
+                </template>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reader -->
+      <section x-show="current" x-cloak class="px-4 md:px-8 py-6 md:py-8">
+        <div class="max-w-6xl mx-auto grid gap-8" :class="toc.length > 1 ? 'xl:grid-cols-[minmax(0,1fr)_15rem]' : ''">
+          <article class="min-w-0">
+            <!-- Meta bar -->
+            <div class="flex flex-wrap items-center gap-2 text-xs text-[color:var(--muted)] mb-4">
+              <span x-text="current && sectionLabel(current)"></span>
+              <span x-show="current && current.simulated" class="font-semibold px-2 py-0.5 rounded bg-amber-300 text-amber-950 dark:bg-amber-600 dark:text-white text-[11px]" title="სიმულირებული მასალა: ჩაბარებამდე გაიმეორეთ რეალურ ადამიანებთან"><i class="fa-solid fa-flask mr-1"></i>სიმულაცია</span>
+              <span x-show="current && current.words" x-text="current && (current.words.toLocaleString('en-US') + ' სიტყვა')"></span>
+              <span x-show="current && !current.content" x-text="current && fmtSize(current.size)"></span>
+              <span x-text="current && fmtDate(current.mtime)"></span>
+            </div>
+            <div class="flex items-center gap-2 mb-6 min-w-0 rounded-lg border border-[color:var(--line)] bg-[color:var(--panel)] pl-3 pr-1 py-1">
+              <code class="text-xs min-w-0 flex-1 [overflow-wrap:anywhere] text-[color:var(--muted)]" x-text="current && current.path"></code>
+              <button @click="copyPath()" class="shrink-0 text-xs px-2 py-1 rounded-md hover:bg-black/5 dark:hover:bg-white/10" ><i class="fa-regular mr-1" :class="copied ? 'fa-check' : 'fa-copy'"></i><span x-text="copied ? 'დაკოპირდა' : 'კოპირება'"></span></button>
+            </div>
+
+            <!-- Markdown -->
+            <template x-if="current && current.type === 'markdown'">
+              <div class="md" x-ref="md" x-html="html"></div>
+            </template>
+            <!-- Plain text -->
+            <template x-if="current && current.type === 'text'">
+              <div>
+                <h1 class="text-2xl font-bold mb-4 [overflow-wrap:anywhere]" x-text="current.title"></h1>
+                <div class="plain rounded-lg border border-[color:var(--line)] bg-[color:var(--panel)] p-4" x-text="current.content"></div>
+              </div>
+            </template>
+            <!-- HTML deliverable -->
+            <template x-if="current && current.type === 'html'">
+              <div>
+                <div class="flex flex-wrap items-center gap-3 mb-3">
+                  <h1 class="text-xl font-bold [overflow-wrap:anywhere]" x-text="current.title"></h1>
+                  <a :href="fileUrl(current.path)" target="_blank" rel="noopener" class="ml-auto btn"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> ახალ ჩანართში გახსნა</a>
+                </div>
+                <iframe :src="fileUrl(current.path)" class="w-full h-[78vh] rounded-lg border border-[color:var(--line)] bg-white" :title="current.title"></iframe>
+              </div>
+            </template>
+            <!-- PDF -->
+            <template x-if="current && current.type === 'pdf'">
+              <div>
+                <div class="flex flex-wrap items-center gap-3 mb-3">
+                  <h1 class="text-xl font-bold [overflow-wrap:anywhere]" x-text="current.title"></h1>
+                  <a :href="fileUrl(current.path)" target="_blank" rel="noopener" class="ml-auto btn"><i class="fa-solid fa-arrow-up-right-from-square text-xs"></i> PDF-ის გახსნა</a>
+                </div>
+                <object :data="fileUrl(current.path)" type="application/pdf" class="w-full h-[80vh] rounded-lg border border-[color:var(--line)] bg-[color:var(--panel)]">
+                  <div class="p-6 text-sm">ბრაუზერი PDF-ს ვერ აჩვენებს. <a class="text-accent-600 underline" :href="fileUrl(current.path)" target="_blank">გახსენით ფაილი</a>.</div>
+                </object>
+              </div>
+            </template>
+            <!-- Image -->
+            <template x-if="current && current.type === 'image'">
+              <div>
+                <h1 class="text-xl font-bold mb-3 [overflow-wrap:anywhere]" x-text="current.title"></h1>
+                <img :src="fileUrl(current.path)" :alt="current.title" class="max-w-full h-auto rounded-lg border border-[color:var(--line)]">
+              </div>
+            </template>
+            <!-- Download (pptx, other) -->
+            <template x-if="current && ['markdown','text','html','pdf','image'].indexOf(current.type) < 0">
+              <div class="rounded-xl border border-[color:var(--line)] bg-[color:var(--panel)] p-6">
+                <h1 class="text-xl font-bold [overflow-wrap:anywhere]" x-text="current.title"></h1>
+                <p class="mt-2 text-sm text-[color:var(--muted)]"><span x-text="current.ext.toUpperCase()"></span> ფაილი, <span x-text="fmtSize(current.size)"></span>. ბრაუზერში ვერ ჩაიტვირთება, გახსენით ლოკალურ პროგრამაში.</p>
+                <p x-show="sourceFor(current)" class="mt-2 text-sm">ტექსტური ამონაწერი: <a href="#" class="text-accent-600 dark:text-accent-400 underline" @click.prevent="open(sourceFor(current))" x-text="sourceFor(current)"></a></p>
+                <a :href="fileUrl(current.path)" download class="btn mt-4 inline-flex"><i class="fa-solid fa-download text-xs"></i> ჩამოტვირთვა / გახსნა</a>
+              </div>
+            </template>
+
+            <!-- Prev / next -->
+            <div class="mt-12 grid grid-cols-2 gap-3">
+              <div>
+                <template x-if="prevDoc">
+                  <a :href="'#doc=' + encodeURI(prevDoc.path)" @click.prevent="open(prevDoc.path)" class="block h-full rounded-lg border border-[color:var(--line)] bg-[color:var(--panel)] p-3 hover:border-accent-400">
+                    <div class="text-[11px] text-[color:var(--muted)]"><i class="fa-solid fa-arrow-left"></i> წინა <kbd class="kbd ml-1">k</kbd></div>
+                    <div class="text-sm font-medium mt-0.5 [overflow-wrap:anywhere]" x-text="prevDoc.title"></div>
+                  </a>
+                </template>
+              </div>
+              <div>
+                <template x-if="nextDoc">
+                  <a :href="'#doc=' + encodeURI(nextDoc.path)" @click.prevent="open(nextDoc.path)" class="block h-full text-right rounded-lg border border-[color:var(--line)] bg-[color:var(--panel)] p-3 hover:border-accent-400">
+                    <div class="text-[11px] text-[color:var(--muted)]"><kbd class="kbd mr-1">j</kbd> შემდეგი <i class="fa-solid fa-arrow-right"></i></div>
+                    <div class="text-sm font-medium mt-0.5 [overflow-wrap:anywhere]" x-text="nextDoc.title"></div>
+                  </a>
+                </template>
+              </div>
+            </div>
+          </article>
+
+          <!-- TOC -->
+          <aside x-show="toc.length > 1" class="hidden xl:block">
+            <div class="sticky top-20 max-h-[calc(100vh-6rem)] overflow-y-auto scroll-thin text-sm">
+              <div class="text-[11px] uppercase tracking-wide text-[color:var(--muted)] mb-2">სარჩევი</div>
+              <ul class="border-l border-[color:var(--line)]">
+                <template x-for="h in toc" :key="h.id">
+                  <li><a :href="'#' " @click.prevent="scrollToId(h.id)"
+                         class="py-1 -ml-px border-l leading-snug line-clamp-2 hover:text-accent-600 dark:hover:text-accent-400"
+                         :class="[h.level === 3 ? 'pl-6 text-[13px]' : 'pl-3', activeH === h.id ? 'border-accent-500 text-accent-700 dark:text-accent-400 font-medium' : 'border-transparent text-[color:var(--muted)]']"
+                         x-text="h.text"></a></li>
+                </template>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <footer class="max-w-6xl mx-auto px-4 md:px-8 py-8 text-xs text-[color:var(--muted)] border-t border-[color:var(--line)] mt-6 flex flex-wrap gap-x-4 gap-y-1">
+        <span><i class="fa-regular fa-database mr-1"></i>მონაცემები აგებულია: <span class="tabular-nums" x-text="builtAt"></span></span>
+        <span><i class="fa-regular fa-arrows-rotate mr-1"></i>განახლება: <code class="px-1 rounded bg-[color:var(--code)]">python3 scripts/build-index.py</code>, შემდეგ გვერდის გადატვირთვა.</span>
+      </footer>
+    </main>
+  </div>
+
+  <div x-show="toast" x-cloak x-transition.opacity class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 rounded-lg bg-slate-900 text-white text-sm px-4 py-2 shadow-lg" x-text="toast"></div>
+</div>
+
+<style>
+  .kbd { display: inline-block; min-width: 1.3em; text-align: center; font-family: ui-monospace, monospace; font-size: 11px; padding: 0 4px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px; background: var(--bg); }
+  .btn { display: inline-flex; align-items: center; gap: .35rem; font-size: .85rem; font-weight: 500; padding: .45rem .8rem; border-radius: .5rem; background: #23736c; color: #fff; }
+  .btn:hover { background: #1d5d58; }
+</style>
+
+<script>
+(function () {
+  var DATA = window.SITE_DATA || { files: [], sections: [], psfGroups: [], builtAt: '' };
+  var FILES = DATA.files;
+  var BY_PATH = {};
+  FILES.forEach(function (f) { BY_PATH[f.path] = f; });
+
+  function ls(key, val) {
+    try {
+      if (val === undefined) return localStorage.getItem(key);
+      if (val === null) localStorage.removeItem(key); else localStorage.setItem(key, val);
+    } catch (e) { return null; }
+  }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+  // Course task checklist, derived from file presence.
+  var TASKS = [
+    { id: 'problem', week: 'კვ. 1', label: 'Problem Statement', re: /allaccess\/week1\/.*problem/i },
+    { id: 'guide', week: 'კვ. 3', label: 'Interview Guide (კითხვარი)', re: /allaccess\/week3\/.*interview-guide/i },
+    { id: 'amap', week: 'კვ. 3', label: 'Assumption Map', re: /allaccess\/week3\/.*assumption/i },
+    { id: 'profile', week: 'კვ. 3', label: 'Customer Profile / Persona', re: /allaccess\/week3\/.*(customer-profile|persona)/i },
+    { id: 'interviews', week: 'PSF', label: '6 ინტერვიუ (2 თითო წევრზე)', re: /allaccess\/week2-psf\/interviews\/\d+[^/]*\.md$/i, need: 6 },
+    { id: 'synthesis', week: 'PSF', label: 'სინთეზი, VPC, პასპორტი', re: /allaccess\/week2-psf\/synthesis/i },
+    { id: 'comic', week: 'PSF', label: 'კომიქსი (6 კადრი)', re: /^allaccess\/week2-psf\/comic\/index\.html$/i },
+    { id: 'prototype', week: 'PSF', label: 'ქაღალდის პროტოტიპი', re: /^allaccess\/week2-psf\/prototype\/index\.html$/i },
+    { id: 'ptests', week: 'PSF', label: 'პროტოტიპის ტესტი (3 ტესტერი)', re: /^allaccess\/week2-psf\/tests\/prototype-test\.md$/i },
+    { id: 'poster', week: 'PSF', label: 'პოსტერი / Story (1 CTA)', re: /^allaccess\/week2-psf\/poster\/index\.html$/i },
+    { id: 'pstest', week: 'PSF', label: 'პოსტერის ტესტი (პროგნოზი + შედეგი)', re: /^allaccess\/week2-psf\/tests\/poster-test\.md$/i },
+    { id: 'validation', week: 'კვ. 3', label: 'Validation Experiment გეგმა', re: /^allaccess\/week3\/validation-plan\.md$/i },
+    { id: 'update', week: 'კვ. 3', label: '60 წამიანი განახლება', re: /^allaccess\/week3\/team-update-60s\.md$/i },
+    { id: 'homework', week: 'კვ. 3', label: 'საშინაო დავალება', re: /^allaccess\/week3\/homework\.md$/i },
+    { id: 'final', week: 'PSF', label: 'საბოლოო AllAccess_PSF.pdf', re: /^allaccess\/week2-psf\/AllAccess_PSF\.pdf$/i }
+  ];
+
+  var QUICK = [
+    ['allaccess/BRIEF.md', 'გუნდის ბრიფი (BRIEF)'],
+    ['allaccess/README.md', 'README: რა უნდა გაკეთდეს'],
+    ['allaccess/week1/problem-statement.md', 'Problem Statement'],
+    ['allaccess/week3/interview-guide.md', 'ინტერვიუს კითხვარი'],
+    ['allaccess/week2-psf/interviews/ROSTER.md', 'რესპონდენტების გეგმა (ROSTER)'],
+    ['allaccess/week2-psf/synthesis.md', 'სინთეზი და VPC'],
+    ['allaccess/week2-psf/AllAccess_PSF.html', 'PSF ნაშრომი (HTML)'],
+    ['allaccess/AllAccess_PSF.html', 'PSF ნაშრომი (HTML)'],
+    ['allaccess/week2-psf/AllAccess_PSF.pdf', 'PSF ნაშრომი (PDF)'],
+    ['allaccess/AllAccess_PSF.pdf', 'PSF ნაშრომი (PDF)']
+  ];
+
+  function dirOf(p) { var i = p.lastIndexOf('/'); return i < 0 ? '' : p.slice(0, i); }
+  function resolvePath(base, href) {
+    var parts = (href.charAt(0) === '/' ? [] : base.split('/').filter(Boolean));
+    href.replace(/^\//, '').split('/').forEach(function (seg) {
+      if (seg === '..') parts.pop(); else if (seg && seg !== '.') parts.push(seg);
+    });
+    return parts.join('/');
+  }
+
+  window.nav = function () {
+    return {
+      files: FILES,
+      tree: [],
+      current: null,
+      html: '',
+      toc: [],
+      activeH: null,
+      drawer: false,
+      help: false,
+      dark: document.documentElement.classList.contains('dark'),
+      query: '', results: [], sel: 0, searchOpen: false,
+      copied: false, toast: '',
+      openSecs: {},
+      gPending: false,
+      tasks: [], doneCount: 0, quick: [], recent: [], stats: [], simCount: 0,
+      builtAt: '',
+
+      init: function () {
+        var self = this;
+        this.builtAt = DATA.builtAt ? new Date(DATA.builtAt).toLocaleString('ka-GE') : 'უცნობია (site-data.js ვერ ჩაიტვირთა)';
+        this.buildTree();
+        this.buildDashboard();
+        var saved = null;
+        try { saved = JSON.parse(ls('aa-open-secs') || 'null'); } catch (e) {}
+        var defaults = {};
+        this.tree.forEach(function (s) { defaults[s.id] = s.id !== 'sources'; });
+        this.openSecs = Object.assign(defaults, saved || {});
+        if (!location.hash || location.hash === '#') {
+          var last = ls('aa-last-doc');
+          if (last && BY_PATH[last]) { history.replaceState(null, '', '#doc=' + encodeURI(last)); }
+        }
+        this.fromHash();
+        window.addEventListener('scroll', function () { self.spy(); }, { passive: true });
+        matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+          if (!ls('aa-theme')) self.applyTheme(e.matches ? 'dark' : 'light', false);
+        });
+      },
+
+      buildTree: function () {
+        var groupsMeta = {};
+        (DATA.psfGroups || []).forEach(function (g, i) { groupsMeta[g.id] = { label: g.label, i: i }; });
+        this.tree = DATA.sections.map(function (s) {
+          var files = FILES.filter(function (f) { return f.section === s.id; });
+          var groups = [];
+          if (s.id === 'week2-psf') {
+            var map = {};
+            files.forEach(function (f) {
+              var g = f.group || 'other';
+              if (!map[g]) { map[g] = { id: g, label: (groupsMeta[g] || { label: g }).label, files: [] }; groups.push(map[g]); }
+              map[g].files.push(f);
+            });
+            groups.sort(function (a, b) { return ((groupsMeta[a.id] || { i: 99 }).i) - ((groupsMeta[b.id] || { i: 99 }).i); });
+          } else if (s.id === 'materials') {
+            var decks = files.filter(function (f) { return /პრეზენტაციები/.test(f.path); });
+            var uploads = files.filter(function (f) { return !/პრეზენტაციები/.test(f.path); });
+            if (decks.length) groups.push({ id: 'decks', label: 'პრეზენტაციები', files: decks });
+            if (uploads.length) groups.push({ id: 'uploads', label: 'ატვირთვის საქაღალდე', files: uploads });
+          } else {
+            groups.push({ id: null, label: '', files: files });
+          }
+          return { id: s.id, label: s.label, groups: groups, count: files.length };
+        }).filter(function (s) { return s.count > 0; });
+        // Flat order for j/k matches the tree.
+        var flat = [];
+        this.tree.forEach(function (s) { s.groups.forEach(function (g) { flat.push.apply(flat, g.files); }); });
+        this.flat = flat;
+      },
+
+      buildDashboard: function () {
+        var done = 0;
+        this.tasks = TASKS.map(function (t) {
+          var m = FILES.filter(function (f) { return t.re.test(f.path); });
+          var ok = t.need ? m.length >= t.need : m.length > 0;
+          if (ok) done++;
+          return {
+            id: t.id, label: t.label, week: t.week, files: m, done: ok,
+            progress: t.need ? (Math.min(m.length, t.need) + '/' + t.need) : '',
+            simulated: m.some(function (f) { return f.simulated; })
+          };
+        });
+        this.doneCount = done;
+        var seen = {};
+        this.quick = QUICK.filter(function (q) {
+          var f = BY_PATH[q[0]];
+          if (!f || seen[q[1]]) return false;
+          seen[q[1]] = 1; return true;
+        }).map(function (q) { return { path: q[0], label: q[1], ext: BY_PATH[q[0]].ext, type: BY_PATH[q[0]].type }; });
+        this.recent = FILES.filter(function (f) { return f.section !== 'materials' && f.section !== 'sources'; })
+          .slice().sort(function (a, b) { return a.mtime < b.mtime ? 1 : -1; }).slice(0, 6);
+        this.simCount = FILES.filter(function (f) { return f.simulated && f.section !== 'sources'; }).length;
+        var words = FILES.filter(function (f) { return f.path.indexOf('allaccess/') === 0 && f.section !== 'sources'; })
+          .reduce(function (a, f) { return a + (f.words || 0); }, 0);
+        this.stats = [
+          { icon: 'fa-circle-check', label: 'დავალება შესრულებული', value: done + '/' + TASKS.length },
+          { icon: 'fa-folder-open', label: 'ჩვენი ფაილი', value: FILES.filter(function (f) { return f.path.indexOf('allaccess/') === 0 && f.section !== 'sources'; }).length },
+          { icon: 'fa-text', label: 'სიტყვა (ჩვენი ტექსტი)', value: words.toLocaleString('en-US') },
+          { icon: 'fa-flask', label: 'სიმულაცია ნიშნით', value: this.simCount }
+        ];
+      },
+
+      fileIcon: function (f) {
+        var t = f.type || ({ md: 'markdown', pdf: 'pdf', html: 'html', pptx: 'pptx', txt: 'text' })[f.ext] || 'other';
+        return ({ markdown: 'fa-regular fa-file-lines', text: 'fa-regular fa-file', html: 'fa-regular fa-file-code', pdf: 'fa-regular fa-file-pdf',
+          pptx: 'fa-regular fa-file-powerpoint', image: 'fa-regular fa-file-image', docx: 'fa-regular fa-file-word', audio: 'fa-regular fa-file-audio',
+          video: 'fa-regular fa-file-video', data: 'fa-regular fa-file-csv' })[t] || 'fa-regular fa-file';
+      },
+      secIcon: function (id) {
+        var fixed = { overview: 'fa-compass', materials: 'fa-presentation-screen', sources: 'fa-file-lines' }[id];
+        return fixed || (this.isOpen(id) ? 'fa-folder-open' : 'fa-folder');
+      },
+      isOpen: function (id) { return !!this.openSecs[id]; },
+      toggleSec: function (id) { this.openSecs[id] = !this.openSecs[id]; ls('aa-open-secs', JSON.stringify(this.openSecs)); },
+      navLabel: function (f) {
+        if (f.section === 'sources' || f.section === 'materials') return f.name;
+        if (f.group === 'interviews' && /^\d+\.md$/.test(f.name)) return f.name.replace('.md', '') + ' · ' + f.title.replace(/^.*?:\s*/, '').replace(/\s*\(.*$/, '');
+        return f.title.replace(/^ALL access:\s*/i, '');
+      },
+      sectionLabel: function (f) {
+        var s = DATA.sections.filter(function (x) { return x.id === f.section; })[0];
+        var g = f.group && (DATA.psfGroups || []).filter(function (x) { return x.id === f.group; })[0];
+        return (s ? s.label : f.section) + (g ? ' / ' + g.label : '');
+      },
+      sourceFor: function (f) {
+        if (f.section !== 'materials') return null;
+        var n = f.path;
+        var key = /Week 1/.test(n) ? 'week1' : /Problem_Solution_Fit_v2/.test(n) ? 'week2-lecture' : /Problem Solution Fit, CU/.test(n) ? 'week2-psf-assignment' : /Week 3/.test(n) ? 'week3' : null;
+        var p = key && 'allaccess/_sources/' + key + '.txt';
+        return p && BY_PATH[p] ? p : null;
+      },
+
+      fromHash: function () {
+        var h = location.hash.replace(/^#/, '');
+        if (h.indexOf('doc=') === 0) {
+          var p = h.slice(4);
+          try { p = decodeURIComponent(p); } catch (e) {}
+          if (BY_PATH[p]) { this.show(BY_PATH[p]); return; }
+          this.flash('ფაილი ვერ მოიძებნა: ' + p);
+        }
+        this.showHome();
+      },
+      open: function (path) {
+        this.drawer = false;
+        var target = '#doc=' + encodeURI(path);
+        if (location.hash === target) { this.show(BY_PATH[path]); return; }
+        location.hash = target;
+      },
+      goHome: function () { this.drawer = false; ls('aa-last-doc', null); if (location.hash && location.hash !== '#home') location.hash = 'home'; else this.showHome(); },
+      showHome: function () { this.current = null; this.toc = []; this.html = ''; window.scrollTo(0, 0); document.title = 'ALL access · CUnicorn'; },
+
+      show: function (f) {
+        var self = this;
+        this.current = f;
+        ls('aa-last-doc', f.path);
+        document.title = f.title + ' · ALL access';
+        this.toc = []; this.activeH = null;
+        this.html = f.type === 'markdown' ? this.renderMd(f.content) : '';
+        window.scrollTo(0, 0);
+        this.$nextTick(function () { self.postRender(); });
+      },
+
+      renderMd: function (src) {
+        if (!window.marked) return '<pre>' + esc(src) + '</pre>';
+        var out = marked.parse(src, { gfm: true, breaks: false });
+        // Wrap tables so wide ones scroll inside their box, not the page.
+        return out.replace(/<table>/g, '<div class="tbl"><table>').replace(/<\/table>/g, '</table></div>');
+      },
+
+      postRender: function () {
+        var self = this, root = this.$refs.md;
+        if (!root || !this.current) return;
+        var base = dirOf(this.current.path), used = {};
+        var toc = [];
+        root.querySelectorAll('h2, h3').forEach(function (h, i) {
+          var id = 'h-' + i;
+          h.id = id; used[id] = 1;
+          toc.push({ id: id, text: h.textContent, level: h.tagName === 'H2' ? 2 : 3 });
+        });
+        this.toc = toc;
+        root.querySelectorAll('a[href]').forEach(function (a) {
+          var href = a.getAttribute('href');
+          if (/^([a-z]+:|#|\/\/)/i.test(href)) { if (!/^#/.test(href)) { a.target = '_blank'; a.rel = 'noopener'; } return; }
+          var clean = href.split('#')[0];
+          try { clean = decodeURI(clean); } catch (e) {}
+          var p = resolvePath(base, clean);
+          if (!BY_PATH[p] && BY_PATH[clean]) p = clean;
+          if (BY_PATH[p]) { a.setAttribute('href', '#doc=' + encodeURI(p)); a.addEventListener('click', function (ev) { ev.preventDefault(); self.open(p); }); }
+          else { a.setAttribute('href', encodeURI(p)); a.target = '_blank'; }
+        });
+        root.querySelectorAll('img[src]').forEach(function (img) {
+          var s = img.getAttribute('src');
+          if (!/^([a-z]+:|\/\/)/i.test(s)) img.setAttribute('src', encodeURI(resolvePath(base, decodeURI(s))));
+        });
+        // Inline code that names a repo file becomes a link.
+        root.querySelectorAll('code').forEach(function (c) {
+          if (c.parentElement && c.parentElement.tagName === 'PRE') return;
+          var t = c.textContent.trim().replace(/^\.?\//, '');
+          var p = BY_PATH[t] ? t : (BY_PATH[resolvePath(base, t)] ? resolvePath(base, t) : null);
+          if (p) { c.classList.add('doc-link'); c.title = 'გახსნა'; c.addEventListener('click', function () { self.open(p); }); }
+        });
+        // Highlight the simulation label in the text.
+        var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+        while ((n = walker.nextNode())) if (n.nodeValue.indexOf('სიმულაცია') >= 0 && !(n.parentElement.closest('pre, code'))) nodes.push(n);
+        nodes.forEach(function (node) {
+          var frag = document.createDocumentFragment();
+          node.nodeValue.split(/(სიმულაცია)/).forEach(function (part) {
+            if (part === 'სიმულაცია') { var s = document.createElement('span'); s.className = 'sim'; s.textContent = part; frag.appendChild(s); }
+            else if (part) frag.appendChild(document.createTextNode(part));
+          });
+          node.parentNode.replaceChild(frag, node);
+        });
+        this.spy();
+      },
+
+      spy: function () {
+        if (!this.toc.length) return;
+        var active = this.toc[0].id;
+        for (var i = 0; i < this.toc.length; i++) {
+          var el = document.getElementById(this.toc[i].id);
+          if (el && el.getBoundingClientRect().top < 120) active = this.toc[i].id; else if (el) break;
+        }
+        this.activeH = active;
+      },
+      scrollToId: function (id) { var el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); },
+
+      get siblings() { var c = this.current; return c ? this.flat.filter(function (f) { return f.section === c.section; }) : []; },
+      get prevDoc() { var s = this.siblings, i = s.indexOf(this.current); return i > 0 ? s[i - 1] : null; },
+      get nextDoc() { var s = this.siblings, i = s.indexOf(this.current); return i >= 0 && i < s.length - 1 ? s[i + 1] : null; },
+      step: function (d) {
+        var i = this.current ? this.flat.indexOf(this.current) : -1;
+        var j = i + d;
+        if (j < 0 || j >= this.flat.length) return;
+        this.open(this.flat[j].path);
+      },
+
+      runSearch: function () {
+        var q = this.query.trim().toLowerCase();
+        this.sel = 0;
+        if (q.length < 2) { this.results = []; this.searchOpen = q.length > 0; return; }
+        var res = [];
+        FILES.forEach(function (f) {
+          var title = (f.title || '').toLowerCase(), path = f.path.toLowerCase();
+          var body = f.content ? f.content.toLowerCase() : '';
+          var count = 0, first = -1, idx = body.indexOf(q);
+          if (idx >= 0) first = idx;
+          while (idx >= 0 && count < 999) { count++; idx = body.indexOf(q, idx + q.length); }
+          var inTitle = title.indexOf(q) >= 0, inPath = path.indexOf(q) >= 0;
+          if (!count && !inTitle && !inPath) return;
+          var snippet = '';
+          if (first >= 0) {
+            var a = Math.max(0, first - 60), b = Math.min(f.content.length, first + q.length + 90);
+            var raw = f.content.slice(a, b).replace(/\s+/g, ' ');
+            snippet = (a > 0 ? '... ' : '') + hl(raw, q) + (b < f.content.length ? ' ...' : '');
+          }
+          var score = (inTitle ? 100 : 0) + (inPath ? 20 : 0) + Math.min(count, 50) + (f.section === 'sources' || f.section === 'materials' ? -15 : 0);
+          res.push({ path: f.path, titleHtml: hl(f.title, q), snippet: snippet, count: count, score: score });
+        });
+        res.sort(function (x, y) { return y.score - x.score || (x.path < y.path ? -1 : 1); });
+        this.results = res.slice(0, 40);
+        this.searchOpen = true;
+        function hl(text, q) {
+          var lower = text.toLowerCase(), out = '', pos = 0, i;
+          while ((i = lower.indexOf(q, pos)) >= 0) { out += esc(text.slice(pos, i)) + '<mark>' + esc(text.slice(i, i + q.length)) + '</mark>'; pos = i + q.length; }
+          return out + esc(text.slice(pos));
+        }
+      },
+      moveSel: function (d) { if (!this.results.length) return; this.sel = (this.sel + d + this.results.length) % this.results.length; },
+      openSel: function () { var r = this.results[this.sel]; if (r) { this.open(r.path); this.searchOpen = false; this.$refs.search.blur(); } },
+
+      onKey: function (e) {
+        var tag = (e.target && e.target.tagName) || '';
+        var typing = /INPUT|TEXTAREA|SELECT/.test(tag) || (e.target && e.target.isContentEditable);
+        if (e.key === 'Escape') { this.help = false; this.drawer = false; this.searchOpen = false; return; }
+        if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
+        if (this.gPending) {
+          this.gPending = false;
+          if (e.key === 'h') { e.preventDefault(); this.goHome(); return; }
+        }
+        switch (e.key) {
+          case '/': e.preventDefault(); this.$refs.search.focus(); this.$refs.search.select(); break;
+          case 'j': this.step(1); break;
+          case 'k': this.step(-1); break;
+          case 'g': var self = this; this.gPending = true; setTimeout(function () { self.gPending = false; }, 1200); break;
+          case 't': this.toggleTheme(); break;
+          case '?': this.help = !this.help; break;
+        }
+      },
+
+      toggleTheme: function () { this.applyTheme(this.dark ? 'light' : 'dark', true); },
+      applyTheme: function (t, persist) {
+        this.dark = t === 'dark';
+        document.documentElement.classList.toggle('dark', this.dark);
+        document.documentElement.dataset.theme = t;
+        if (persist) ls('aa-theme', t);
+      },
+
+      copyPath: function () {
+        var self = this, text = this.current ? this.current.path : '';
+        function done() { self.copied = true; setTimeout(function () { self.copied = false; }, 1400); }
+        function fallback() {
+          var ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select();
+          try { document.execCommand('copy'); done(); } catch (e) { self.flash('კოპირება ვერ მოხერხდა'); }
+          document.body.removeChild(ta);
+        }
+        if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
+      },
+      flash: function (msg) { var self = this; this.toast = msg; setTimeout(function () { self.toast = ''; }, 2500); },
+
+      fileUrl: function (p) { return encodeURI(p).replace(/#/g, '%23').replace(/\?/g, '%3F'); },
+      fmtSize: function (b) { if (b < 1024) return b + ' B'; if (b < 1048576) return (b / 1024).toFixed(1) + ' KB'; return (b / 1048576).toFixed(1) + ' MB'; },
+      fmtDate: function (iso) { try { return new Date(iso).toLocaleString('ka-GE', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (e) { return iso; } }
+    };
+  };
+})();
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
+</body>
+</html>
