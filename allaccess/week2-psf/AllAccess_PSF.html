@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AllAccess_PSF</title>
+<link rel="stylesheet" href="../../vendor/fontawesome/css/all.css">
+<style>
+  :root {
+    --ink: #16203f;
+    --ink-2: #4a5470;
+    --muted: #7a8299;
+    --line: #d9dde7;
+    --soft: #f4f6fa;
+    --navy: #13204a;
+    --lime: #d4f53c;
+    --lime-soft: #f3fbd0;
+    --sim: #ffd84a;
+    --sim-soft: #fff6d1;
+    --sim-ink: #6b4e00;
+    --red: #c2362b;
+    --red-soft: #fbe7e5;
+    --green: #237a45;
+    --green-soft: #e3f4e8;
+    --blue-soft: #e8eefb;
+  }
+  @page { size: A4 portrait; margin: 13mm 13mm 15mm 13mm; }
+  @page land { size: A4 landscape; margin: 10mm 12mm 13mm 12mm; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; }
+  body {
+    font-family: "Noto Sans Georgian", "Noto Serif Georgian", sans-serif;
+    color: var(--ink);
+    font-size: 9.4pt;
+    line-height: 1.42;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page { break-after: page; }
+  .page:last-child { break-after: auto; }
+  .landscape { page: land; }
+  h1, h2, h3, h4 { margin: 0; line-height: 1.25; }
+  p { margin: 0 0 2.2mm; }
+  .fa-solid, .fa-regular { width: 1.15em; text-align: center; }
+
+  /* section header */
+  .sec-head { display: flex; align-items: center; gap: 4mm; margin-bottom: 3.5mm; padding-bottom: 2.5mm; border-bottom: 2px solid var(--navy); }
+  .sec-num { flex: none; width: 11mm; height: 11mm; border-radius: 3mm; background: var(--navy); color: var(--lime); display: grid; place-items: center; font-weight: 800; font-size: 15pt; }
+  .sec-head h2 { font-size: 15pt; font-weight: 800; }
+  .sec-head .sub { font-size: 8.6pt; color: var(--ink-2); margin-top: 0.6mm; }
+  h3 { font-size: 11pt; font-weight: 800; margin: 4mm 0 2mm; }
+  h3 i { color: var(--navy); }
+
+  .sim { display: inline-block; background: var(--sim); color: #3a2a00; font-weight: 800; font-size: 7.2pt; padding: 0.3mm 1.6mm; border-radius: 1.2mm; vertical-align: 0.15em; letter-spacing: 0.02em; white-space: nowrap; }
+  .real { display: inline-block; background: var(--green-soft); color: var(--green); font-weight: 800; font-size: 7.2pt; padding: 0.3mm 1.6mm; border-radius: 1.2mm; vertical-align: 0.15em; white-space: nowrap; }
+  .todo { display: inline-block; background: var(--red-soft); color: var(--red); font-weight: 800; font-size: 7.2pt; padding: 0.3mm 1.6mm; border-radius: 1.2mm; vertical-align: 0.15em; white-space: nowrap; }
+  .src { color: var(--muted); font-size: 8pt; white-space: nowrap; }
+  .note { font-size: 8.3pt; color: var(--ink-2); }
+  .simbar { background: var(--sim-soft); border: 1px solid #f0d36a; border-left: 4px solid var(--sim); border-radius: 2mm; padding: 2mm 3mm; font-size: 8.4pt; color: var(--sim-ink); margin-bottom: 3mm; break-inside: avoid; }
+  .simbar b { color: #4a3500; }
+
+  /* tables */
+  table { width: 100%; border-collapse: collapse; }
+  .kv td, .kv th { border: 1px solid var(--line); padding: 2mm 2.6mm; vertical-align: top; text-align: left; }
+  .kv th { background: var(--soft); width: 33%; font-weight: 700; font-size: 8.8pt; }
+  .kv tr { break-inside: avoid; }
+  .grid-t th, .grid-t td { border: 1px solid var(--line); padding: 1.5mm 2mm; vertical-align: top; text-align: left; font-size: 8.15pt; line-height: 1.36; }
+  .grid-t thead th { background: var(--navy); color: #fff; font-weight: 700; }
+  .grid-t tr { break-inside: avoid; }
+  .grid-t td.who { background: var(--soft); font-weight: 700; width: 20%; }
+  .q { font-style: normal; color: var(--navy); font-weight: 600; }
+
+  /* cover */
+  .cover { display: flex; flex-direction: column; }
+  .cover-band { background: var(--navy); color: #fff; border-radius: 4mm; padding: 16mm 12mm 16mm; position: relative; overflow: hidden; }
+  .cover-band::after { content: ""; position: absolute; right: -18mm; top: -18mm; width: 70mm; height: 70mm; border-radius: 50%; background: rgba(212,245,60,0.12); }
+  .brand { font-size: 13pt; font-weight: 800; letter-spacing: 0.01em; }
+  .brand b { color: var(--lime); }
+  .cover h1 { font-size: 27pt; font-weight: 800; margin: 9mm 0 2mm; }
+  .cover h1 span { color: var(--lime); }
+  .cover .lead { font-size: 11pt; color: #cfd6ea; max-width: 150mm; }
+  .cover-meta { margin-top: 6mm; display: grid; grid-template-columns: 1fr 1fr; gap: 2.5mm 6mm; }
+  .cover-meta div { border: 1px solid var(--line); border-radius: 2mm; padding: 2.4mm 3mm; }
+  .cover-meta small { display: block; color: var(--muted); font-size: 7.8pt; font-weight: 700; text-transform: none; }
+  .cover-meta strong { font-size: 10.5pt; }
+  .simbox { margin-top: 6mm; border: 2px solid #e6b800; background: var(--sim-soft); border-radius: 3mm; padding: 4mm 5mm; }
+  .simbox h2 { font-size: 12.5pt; font-weight: 800; color: #4a3500; display: flex; align-items: center; gap: 2mm; margin-bottom: 1.5mm; }
+  .simbox h2 i { color: #b38600; }
+  .simbox p { font-size: 8.7pt; color: #4f3c00; margin-bottom: 2mm; }
+  .simcols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3mm; }
+  .simcols h4 { font-size: 8.8pt; margin-bottom: 1mm; display: flex; gap: 1.5mm; align-items: center; }
+  .simcols ul { margin: 0; padding-left: 4mm; font-size: 8.1pt; color: #3d3000; }
+  .simcols li { margin-bottom: 0.8mm; }
+  .simcols .c1 h4 { color: #8a6300; }
+  .simcols .c2 h4 { color: var(--green); }
+  .simcols .c3 h4 { color: var(--red); }
+  .toc { margin-top: 7mm; display: grid; grid-template-columns: repeat(6, 1fr); gap: 2mm; font-size: 8pt; }
+  .toc div { background: var(--soft); border-radius: 2mm; padding: 2mm 2.4mm; }
+  .toc b { display: block; font-size: 11pt; color: var(--navy); }
+
+  /* interview cards */
+  .cards { display: grid; grid-template-columns: 1fr; gap: 3.5mm; }
+  .card { border: 1.3px solid var(--navy); border-radius: 2.5mm; overflow: hidden; break-inside: avoid; }
+  .card-h { background: var(--navy); color: #fff; display: flex; align-items: center; gap: 3mm; padding: 2mm 3.2mm; }
+  .card-h .n { background: var(--lime); color: var(--navy); font-weight: 800; border-radius: 1.5mm; padding: 0.3mm 2mm; font-size: 10pt; }
+  .card-h .t { font-weight: 700; font-size: 9.6pt; flex: 1; }
+  .card table td, .card table th { border-top: 1px solid var(--line); padding: 1.3mm 2.6mm; vertical-align: top; text-align: left; font-size: 8.5pt; }
+  .card table th { width: 25%; background: var(--soft); font-weight: 700; color: var(--ink-2); font-size: 8.1pt; border-right: 1px solid var(--line); }
+  .card .quote { font-weight: 700; color: var(--navy); font-size: 9.2pt; }
+  .momtest { display: grid; grid-template-columns: 2.6fr 1fr; gap: 3mm; margin-bottom: 3mm; }
+  .momtest .box { background: var(--soft); border-radius: 2mm; padding: 2mm 3mm; font-size: 8.3pt; }
+  .momtest ol { margin: 1mm 0 0; padding-left: 4.5mm; }
+  .map { width: 100%; border-collapse: collapse; font-size: 8.3pt; }
+  .map td, .map th { border: 1px solid var(--line); padding: 1.2mm 2mm; text-align: left; }
+  .map th { background: #e9ecf3; }
+
+  /* figures */
+  figure { margin: 0; break-inside: avoid; }
+  figure img { display: block; width: 100%; border: 1px solid var(--line); border-radius: 1.5mm; }
+  figcaption { font-size: 8pt; color: var(--ink-2); margin-top: 1.2mm; }
+  .fig-row { display: flex; gap: 4mm; align-items: flex-start; }
+  .phone img { border-radius: 3mm; border: 2px solid var(--navy); }
+  .photo-slot { border: 2px dashed #c9ced9; border-radius: 2mm; display: grid; place-items: center; text-align: center; color: var(--muted); font-size: 8.4pt; padding: 4mm; }
+  .photo-slot i { font-size: 18pt; display: block; margin-bottom: 1.5mm; color: #b5bccb; }
+
+  /* comic page */
+  .comic-wrap { display: flex; flex-direction: column; height: 184mm; }
+  .comic-wrap .sec-head { margin-bottom: 2mm; padding-bottom: 1.5mm; }
+  .comic-head > div:nth-child(2) { flex: 1; }
+  .comic-meta { display: flex; flex-direction: column; gap: 1.2mm; width: 118mm; font-size: 7.8pt; }
+  .comic-meta .basis { background: var(--navy); color: #fff; border-radius: 2mm; padding: 1mm 3mm; font-weight: 700; display: block; }
+  .comic-meta .basis b { color: var(--lime); }
+  .comic-meta .simbar { margin: 0; flex: 1; padding: 1.4mm 3mm; }
+  .comic-img { flex: 1; min-height: 0; display: flex; justify-content: center; }
+  .comic-img img { height: 100%; width: auto; border: 1px solid var(--line); border-radius: 1.5mm; }
+
+  /* poster */
+  .poster-row { display: flex; gap: 5mm; justify-content: center; align-items: flex-end; }
+  .poster-row figure:first-child img { height: 112mm; width: auto; }
+  .poster-row figure:last-child img { height: 112mm; width: auto; }
+  .prediction { border: 2px solid var(--navy); border-radius: 2.5mm; padding: 3mm 4mm; background: var(--blue-soft); break-inside: avoid; }
+  .prediction .tag { display: inline-flex; align-items: center; gap: 1.5mm; font-weight: 800; font-size: 8.4pt; color: var(--navy); margin-bottom: 1.2mm; }
+  .prediction blockquote { margin: 0; font-size: 9.2pt; }
+  .prediction .en { font-size: 8pt; color: var(--ink-2); margin-top: 1.5mm; }
+  .blank { color: var(--red); font-weight: 700; }
+  .funnel { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2mm; margin: 2mm 0 2mm; }
+  .funnel div { border: 1px dashed #d9b84a; background: var(--sim-soft); border-radius: 2mm; padding: 2mm; text-align: center; }
+  .funnel b { display: block; font-size: 15pt; color: #4a3500; }
+  .funnel small { font-size: 7.8pt; color: #6b5200; }
+  .simpanel { border: 2px dashed #e6b800; border-radius: 3mm; padding: 3mm 4mm; background: repeating-linear-gradient(135deg, #fffdf3, #fffdf3 6mm, #fff8dc 6mm, #fff8dc 12mm); break-inside: avoid; }
+  .simpanel h4 { font-size: 10pt; color: #4a3500; margin-bottom: 1mm; }
+
+  /* VPC canvases */
+  .vpc { display: grid; grid-template-columns: 1fr 1.08fr; gap: 5mm; align-items: stretch; break-inside: avoid; margin-bottom: 2mm; }
+  .vpc-title { display: flex; align-items: center; gap: 2.5mm; margin: 2mm 0 2mm; break-after: avoid; }
+  .vpc-title h3 { margin: 0; }
+  .vpc-col h5 { margin: 0 0 1mm; font-size: 7.6pt; color: var(--muted); font-weight: 700; display: flex; align-items: center; gap: 1.5mm; }
+  .vpc-col { display: flex; flex-direction: column; }
+  .vmap { flex: 1; border: 2px solid var(--navy); border-radius: 1.5mm; display: grid; grid-template-columns: 0.85fr 1.15fr; grid-template-rows: auto auto; overflow: hidden; }
+  .vmap > div, .cprof > div { padding: 2mm 2.4mm; font-size: 7.6pt; line-height: 1.32; }
+  .vmap .prod { grid-row: 1 / span 2; border-right: 1.5px solid var(--navy); background: #f7f9fd; }
+  .vmap .gc { border-bottom: 1.5px solid var(--navy); background: #f2fae0; }
+  .vmap .pr { background: #fdf0ee; }
+  .lbl { display: flex; align-items: center; gap: 1.2mm; font-weight: 800; font-size: 7.6pt; color: var(--navy); margin-bottom: 1mm; }
+  .cprof { flex: 1; border: 2px solid var(--navy); border-radius: 26mm; overflow: hidden; display: grid; grid-template-columns: 1.2fr 0.8fr; grid-template-rows: auto auto; }
+  .cprof .gains { grid-column: 1; grid-row: 1; padding: 4mm 2.4mm 2mm 8mm; border-bottom: 1.5px solid var(--navy); background: #f2fae0; }
+  .cprof .pains { grid-column: 1; grid-row: 2; padding: 2mm 2.4mm 4mm 8mm; background: #fdf0ee; }
+  .cprof .jobs { grid-column: 2; grid-row: 1 / span 2; border-left: 1.5px solid var(--navy); padding: 3mm 7mm 3mm 2.6mm; display: flex; flex-direction: column; justify-content: center; background: #f7f9fd; }
+  .it { margin: 0 0 0.9mm; padding-left: 2.6mm; position: relative; }
+  .it::before { content: ""; position: absolute; left: 0; top: 0.55em; width: 1.2mm; height: 1.2mm; border-radius: 50%; background: var(--ink-2); }
+  .x { text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 1.5px; color: #a0525a; }
+  .x::before { background: var(--red); }
+  .new { color: var(--green); font-weight: 700; }
+  .new::before { background: var(--green); }
+  .gap { color: #8a6300; font-style: italic; }
+  .legend { display: flex; gap: 4mm; font-size: 7.8pt; color: var(--ink-2); margin-top: 1mm; }
+  .legend span { display: inline-flex; align-items: center; gap: 1mm; }
+
+  /* checklist */
+  .check { width: 100%; border-collapse: collapse; }
+  .check td { border-bottom: 1px solid var(--line); padding: 2.4mm 2mm; vertical-align: top; font-size: 9pt; }
+  .check td.ic { width: 9mm; font-size: 14pt; text-align: center; }
+  .check .ok { color: var(--green); }
+  .check .part { color: #c48a00; }
+  .check .no { color: var(--red); }
+  .check .st { width: 30mm; font-weight: 800; font-size: 8.4pt; }
+  .redo { counter-reset: r; list-style: none; padding: 0; margin: 0; }
+  .redo li { counter-increment: r; position: relative; padding: 1.6mm 0 1.6mm 9mm; border-bottom: 1px dashed var(--line); font-size: 8.8pt; }
+  .redo li::before { content: counter(r); position: absolute; left: 0; top: 1.4mm; width: 6mm; height: 6mm; border-radius: 50%; background: var(--navy); color: var(--lime); font-weight: 800; font-size: 8pt; display: grid; place-items: center; }
+  .avoid { break-inside: avoid; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+  .decision { background: var(--navy); color: #fff; border-radius: 2.5mm; padding: 3mm 4mm; break-inside: avoid; }
+  .decision .big { color: var(--lime); font-weight: 800; font-size: 12pt; }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<section class="page">
+  <div class="cover">
+    <div class="cover-band">
+      <div class="brand"><i class="fa-solid fa-door-open"></i> <b>ALL</b> access <span style="font-weight:400;color:#aab3cf;font-size:9pt">· allaccess.ge</span></div>
+      <h1>Problem-Solution Fit:<br><span>დაინახეთ პრობლემა</span></h1>
+      <div class="lead">ინტერვიუები, კომიქსი, ქაღალდის პროტოტიპი, პოსტერი და რა ვისწავლეთ. CUnicorn Pre-Acceleration, CU 2026, კვირა 2.</div>
+    </div>
+
+    <div class="cover-meta">
+      <div><small>სტარტაპის სახელი</small><strong>ALL access</strong></div>
+      <div><small>ჩაბარების თარიღი</small><strong>2026-10-30</strong></div>
+      <div><small>გუნდის წევრები (სახელი, გვარი)</small><strong>[წევრი 1], [წევრი 2], [წევრი 3]</strong></div>
+      <div><small>ფაილის სახელი</small><strong>AllAccess_PSF.pdf</strong></div>
+    </div>
+
+    <div class="simbox">
+      <h2><i class="fa-solid fa-triangle-exclamation"></i> მნიშვნელოვანი: ამ ფაილის ნაწილი სიმულაციაა</h2>
+      <p>კურსის წესი 3: ციტატა, ფოტო ან რიცხვი რეალური ინტერვიუს გარეშე არ ჩაითვლება. ქვემოთ ჩამოთვლილი ნაწილები AI პერსონებით არის სიმულირებული და ყველგან აქვს ნიშანი <span class="sim">სიმულაცია</span>. არცერთი სიმულირებული ციტატა ან რიცხვი რეალურად არ არის წარმოდგენილი. ჩაბარებამდე გუნდი ამ ნაწილებს რეალურ ადამიანებთან ხელახლა აკეთებს.</p>
+      <div class="simcols">
+        <div class="c1">
+          <h4><i class="fa-solid fa-flask"></i> სიმულირებულია</h4>
+          <ul>
+            <li>6 ინტერვიუ: ციტატები, რიცხვები, commitment-ები (ნაწილი 1)</li>
+            <li>კომიქსის ისტორია და ციტატა (ინტერვიუ #03)</li>
+            <li>3 ტესტერი: ქცევა, ციტატები, დრო (ნაწილი 3)</li>
+            <li>24 მნახველის პანელი პოსტერზე (ნაწილი 4)</li>
+            <li>VPC „შემდეგ“, სიურპრიზები, ქულები (ნაწილი 5)</li>
+          </ul>
+        </div>
+        <div class="c2">
+          <h4><i class="fa-solid fa-check"></i> რეალურია</h4>
+          <ul>
+            <li>პროტოტიპი (5 ეკრანი) და მისი სკრინშოტები</li>
+            <li>პოსტი და სთორი, ერთი CTA</li>
+            <li>პოსტერის პროგნოზი, ჩაწერილი გამოქვეყნებამდე</li>
+            <li>ჯავშნის ფორმის ფუნქციური შემოწმება</li>
+            <li>VPC „ადრე“ (Week 1-ის ჰიპოთეზა)</li>
+          </ul>
+        </div>
+        <div class="c3">
+          <h4><i class="fa-solid fa-rotate"></i> გასაკეთებელია რეალურად</h4>
+          <ul>
+            <li>6 ინტერვიუ (2 თითო წევრზე), რეალური სახელებით</li>
+            <li>კომიქსის კადრი 5: რეალური ციტატა</li>
+            <li>პროტოტიპი 3 რეალურ ტესტერზე + ფოტო</li>
+            <li>პოსტერი 7 დღე, რეალური ნახვები, ჯავშნები, სკრინშოტი</li>
+            <li>VPC, სიურპრიზები, გადაწყვეტილება ხელახლა</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="toc">
+      <div><b>0</b>სტარტაპის პასპორტი</div>
+      <div><b>1</b>ინტერვიუები (6 ბარათი)</div>
+      <div><b>2</b>კომიქსი (6 კადრი)</div>
+      <div><b>3</b>პროტოტიპი და ტესტი</div>
+      <div><b>4</b>პოსტერი და ტესტი</div>
+      <div><b>5</b>რა ვისწავლეთ + ჩეკლისტი</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 0 PASSPORT ============ -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num">0</div><div><h2>სტარტაპის პასპორტი</h2><div class="sub">განახლებულია ინტერვიუების შემდეგ. თითო უჯრაში მაქსიმუმ 2 წინადადება.</div></div></div>
+  <div class="simbar"><b>სიმულაცია:</b> სეგმენტი, პრობლემა და ალტერნატივები 6 სიმულირებულ ინტერვიუს ეყრდნობა (ნომრები ფრჩხილებში). რეალური ინტერვიუების შემდეგ პასპორტი თავიდან მოწმდება.</div>
+  <table class="kv">
+    <tr><th>სტარტაპის სახელი</th><td><b>ALL access</b> (allaccess.ge)</td></tr>
+    <tr><th>გუნდის წევრები (სახელი, გვარი)</th><td>[წევრი 1], [წევრი 2], [წევრი 3] <span class="todo">შესავსებია</span></td></tr>
+    <tr><th>ერთი წინადადება: „ჩვენ ვეხმარებით [ვის], რომ [რა გააკეთოს]“</th><td>ჩვენ ვეხმარებით ცვლებით მომუშავე კომპანიების HR და ადმინისტრაციის მენეჯერებს, რომ თვის ბოლოს იცოდნენ, ვინ რეალურად იმუშავა თითოეული ცვლა, და ბუღალტერს ტაბელი დღეების ნაცვლად საათებში ჩააბარონ.</td></tr>
+    <tr><th>მომხმარებელი (ვიწრო სეგმენტი, არა „ყველა“)</th><td>თბილისის 20-100 თანამშრომლიანი კომპანიების HR/ადმინისტრაციის მენეჯერები, სადაც მუშაობენ ცვლებით (24/7 კლინიკა, საწყობი სეზონური ზეგანაკვეთურით, call center ღამის ცვლით). ფილტრი აღარ არის „აქვს კარის სისტემა“, არამედ „აქვს ცვლები ან ცვალებადი საათები“ <span class="src">(02, 03, 05)</span>.</td></tr>
+    <tr><th>პრობლემა, რომელსაც ვაგვარებთ</th><td>გრაფიკი ერთგანაა, ხოლო რეალობა (გაცვლები, ჩანაცვლება, ზეგანაკვეთური, ღამის ცვლა, შვებულება/ბიულეტენი) WhatsApp/Viber-ში, ქაღალდის ჟურნალებსა და ცალკე Excel-ებში იფანტება. თვის ბოლოს მენეჯერი ამას ხელით აღადგენს 1-2 სამუშაო დღე და დავები მტკიცებულების გარეშე რჩება <span class="src">(02, 03, 05)</span>.</td></tr>
+    <tr><th>გადაწყვეტა (რას აკეთებს პროდუქტი)</th><td>ALL access-ში ცვლები, როტაციები და გრაფიკები ერთ ადგილასაა, დასწრება ფასდება გრაფიკთან, შვებულება ბალანსებით და მოთხოვნები ერთ inbox-შია, ზეგანაკვეთური ითვლება დანამატის ტარიფით და ტაბელი გადის CSV/XLSX-ით. ყველა ცვლილება აუდიტის ჟურნალში იწერება, ასე რომ დავისას ჩანს, ვინ რა შეცვალა.</td></tr>
+    <tr><th>რას იყენებენ მომხმარებლები ახლა (არსებული ალტერნატივა)</th><td>Excel-ის ფერადი გრაფიკი, WhatsApp/Viber/Slack ჩატების ხელით გადაკითხვა, ცვლის უფროსის ქაღალდის ჟურნალი, ცალკე Excel შვებულების ნაშთისთვის, ზოგან ასისტენტის Excel მაკრო <span class="src">(01, 02, 03, 05)</span>. Google Sheets/Form და ერთი უფასო აპი სცადეს და მიატოვეს <span class="src">(01, 03, 05)</span>.</td></tr>
+    <tr><th>პრობლემის ფორმულირება ახლა: [ვინ], როცა [სიტუაცია], ცდილობს [რის გაკეთებას], მაგრამ [რა უშლის ხელს]</th><td>HR/ადმინისტრაციის მენეჯერი ცვლებიან კომპანიაში, როცა თვის ბოლოს ტაბელს ხურავს, ცდილობს გაარკვიოს, ვინ რეალურად იმუშავა თითოეული ცვლა, მაგრამ გაცვლები და გამონაკლისები ჩატებსა და ქაღალდზეა მიმოფანტული. ახლა იყენებს Excel-ს და ჩატების ხელით გადაკითხვას, რაც 1-2 სამუშაო დღეს ჭამს და დავას ფაქტის გარეშე ტოვებს.</td></tr>
+  </table>
+  <p class="note" style="margin-top:3mm"><b>Week 1-ის ფორმულირება (ინტერვიუებამდე, შედარებისთვის):</b> „HR მენეჯერი, როცა თვის ბოლოს ტაბელს ამზადებს, ცდილობს ხელფასისთვის ზუსტი საათები ჩააბაროს, მაგრამ კარის სისტემის ჩანაწერები გრაფიკს და შვებულებას არ ითვალისწინებს.“ მთავარი ცვლილება: ცენტრში აღარ არის კარის ლოგი, არამედ უფსკრული გრაფიკსა და რეალურად ნამუშევარ ცვლას შორის.</p>
+</section>
+
+<!-- ============ 1 INTERVIEWS ============ -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num">1</div><div><h2>ინტერვიუები</h2><div class="sub">6 ინტერვიუ, თითო წევრზე 2, ერთი ბარათი = ერთი ინტერვიუ. #01-#05 ძირითადი სეგმენტი, #06 მეორადი.</div></div></div>
+  <div class="simbar"><b>სიმულაცია:</b> ექვსივე ინტერვიუ AI პერსონამ ითამაშა. ციტატები, ასაკი, რიცხვები და „სად ვიპოვეთ“ გამოგონილია და მტკიცებულებად არ ითვლება. ჩანაწერის ფოტო ან აუდიო არ არსებობს. ჩაბარებამდე: 6 რეალური ინტერვიუ, ინტერვიუერის ნამდვილი სახელით და აუდიოს დროის ნიშნულით. სრული ტრანსკრიპტები: <code>interviews/01.md</code> ... <code>06.md</code>.</div>
+  <div class="momtest">
+    <div class="box"><b><i class="fa-solid fa-comments"></i> The Mom Test:</b> ვსაუბრობდით მათ ცხოვრებაზე და არა ჩვენს იდეაზე; ვეკითხებოდით ბოლო კონკრეტულ შემთხვევაზე („ბოლოს როდის მოხდა?“); ბოლოს ვითხოვდით რამეს (მეორე შეხვედრა, გაცნობა, ანონიმური გრაფიკი).</div>
+    <div class="box"><b><i class="fa-solid fa-user-group"></i> ვინ ვის ესაუბრა:</b><br>[წევრი 1]: #01, #02<br>[წევრი 2]: #03, #04<br>[წევრი 3]: #05, #06</div>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-h"><span class="n">#1</span><span class="t">ნინო, HR მენეჯერი, IT კომპანია</span><span class="sim">სიმულაცია</span></div>
+      <table>
+        <tr><th>ინტერვიუერი</th><td>[წევრი 1] (დამკვირვებელი: [წევრი 2])</td></tr>
+        <tr><th>რესპონდენტი: როლი, ასაკი, სად ვიპოვეთ</th><td>ერთადერთი HR, 31 წლის; IT კომპანია, 40 თანამშრომელი, ჰიბრიდი, ZKTeco კარი. LinkedIn, ცივი შეტყობინება (არ იცნობდა).</td></tr>
+        <tr><th>როდის შეექმნა პრობლემა ბოლოს (მისი სიტყვებით)</th><td>სექტემბრის ტაბელი, ორ საღამოს, ~6 სთ: „ადმინს ვთხოვე ექსპორტი ტერმინალიდან, თარიღები გადაბრუნებული მოვიდა. მერე Slack-ში #ოფისი ავიღე და ვკითხულობდი, ვინ როდის წერდა, რომ სახლიდან არის. ამას მარტო სამი საათი წავიდა.“</td></tr>
+        <tr><th>საუკეთესო ციტატა</th><td class="quote">„კარი ზუსტად იცის, ვინ შემოვიდა. ის არ იცის, ვინ არ შემოვიდა, რადგან სახლიდან მუშაობდა.“</td></tr>
+        <tr><th>რამ გაგვაკვირვა</th><td>ტკივილი კარის ლოგი კი არა, დისტანციური დღეებია, რომლებიც ლოგში არ ჩანს. დაგვიანებაზე დავა არ არსებობს (მოქნილი გრაფიკი), ხელფასი ფიქსირებულია. წასულის ბარათი 11 დღე აქტიური იყო, მაგრამ ეს შემთხვევითობად აღიქვა.</td></tr>
+        <tr><th>ჩანაწერის ფოტო / აუდიოს ნიშნული</th><td><span class="todo">არ არსებობს</span> სიმულაცია; რეალურ ინტერვიუში ჩაიწერება.</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-h"><span class="n">#2</span><span class="t">დავითი, ოფის-მენეჯერი, ლოჯისტიკა</span><span class="sim">სიმულაცია</span></div>
+      <table>
+        <tr><th>ინტერვიუერი</th><td>[წევრი 1]</td></tr>
+        <tr><th>რესპონდენტი: როლი, ასაკი, სად ვიპოვეთ</th><td>ოფის-მენეჯერი (ადმინისტრაცია + ტაბელი), 38 წლის; ლოჯისტიკა, 70 თანამშრომელი (48 საწყობში), Hikvision კარი. Facebook HR ჯგუფი, პოსტზე კომენტარით გამოგვეპასუხა.</td></tr>
+        <tr><th>როდის შეექმნა პრობლემა ბოლოს (მისი სიტყვებით)</th><td>ოქტომბერი, ზეგანაკვეთური: „ცვლის უფროსის ჟურნალის ფოტო Viber-ში მომივიდა, მძღოლების ფურცლები ცალკე იყო, ექსელში ხელით გადავიტანე და ერთმანეთს არ ემთხვეოდა. ორი დღე წავიდა.“ შარშან ორ მტვირთავთან დავა 3 თვე გაგრძელდა: „შუაზე გავიყავით“.</td></tr>
+        <tr><th>საუკეთესო ციტატა</th><td class="quote">„კარი არ მაინტერესებს. მე ის მაინტერესებს, ვინ დარჩა ღამის 11-მდე და რატომ.“</td></tr>
+        <tr><th>რამ გაგვაკვირვა</th><td>კარის სისტემა ტაბელის წყარო საერთოდ არ არის: საწყობში ჯგუფად შედიან, ერთი „ასკანერებს“. რეალური ტკივილი სეზონური ზეგანაკვეთური და ჟურნალების შეუსაბამობაა. ბარათის გათიშვა მისი საზრუნავი არ არის.</td></tr>
+        <tr><th>ჩანაწერის ფოტო / აუდიოს ნიშნული</th><td><span class="todo">არ არსებობს</span> სიმულაცია; რეალურ ინტერვიუში ჩაიწერება.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="cards">
+    <div class="card">
+      <div class="card-h"><span class="n">#3</span><span class="t">თამარი, HR და ადმინისტრაციის მენეჯერი, კერძო კლინიკა</span><span class="sim">სიმულაცია</span></div>
+      <table>
+        <tr><th>ინტერვიუერი</th><td>[წევრი 2] (დამკვირვებელი: [წევრი 1])</td></tr>
+        <tr><th>რესპონდენტი: როლი, ასაკი, სად ვიპოვეთ</th><td>HR და ადმინისტრაციის მენეჯერი, 44 წლის; კერძო კლინიკა, 60 თანამშრომელი, 24/7 ცვლები. გაცნობით: [წევრი 2]-ის ნათესავი ამ კლინიკაში ექთანია (HR მეგობარი არ არის).</td></tr>
+        <tr><th>როდის შეექმნა პრობლემა ბოლოს (მისი სიტყვებით)</th><td>წინა თვის ტაბელი, ორი კვირის წინ: „ორი სრული დღე დამჭირდა. ერთი დღე მარტო იმას წავიდა, რომ გამეგო, ვინ ვის მაგივრად გავიდა. გრაფიკში ერთი სახელია, WhatsApp-ში მეორე, ჟურნალში მესამე ხელმოწერა.“ ხელფასი ერთი დღით დაგვიანდა.</td></tr>
+        <tr><th>საუკეთესო ციტატა</th><td class="quote">„გრაფიკი მე შევადგინე, მაგრამ ვინ რეალურად იმუშავა, ეს WhatsApp-მა იცის, მე არა.“ <span class="src">(კომიქსის კადრი 5)</span></td></tr>
+        <tr><th>რამ გაგვაკვირვა</th><td>კარის სისტემა აქვთ (საოპერაციო, აფთიაქი), მაგრამ ტაბელს არ ეხება. ტკივილი ცვლების გაცვლაა (~30-40 თვეში, WhatsApp-ში) და შვებულების ნაშთი. ექიმებმა თითის სკანერი უარყვეს: „ჩვენ ბავშვები ვართ?“</td></tr>
+        <tr><th>ჩანაწერის ფოტო / აუდიოს ნიშნული</th><td><span class="todo">არ არსებობს</span> სიმულაცია; რეალურ ინტერვიუში ჩაიწერება.</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-h"><span class="n">#4</span><span class="t">ლიანა, ბუღალტერი, დისტრიბუციის კომპანია</span><span class="sim">სიმულაცია</span></div>
+      <table>
+        <tr><th>ინტერვიუერი</th><td>[წევრი 2] (დამკვირვებელი: [წევრი 1])</td></tr>
+        <tr><th>რესპონდენტი: როლი, ასაკი, სად ვიპოვეთ</th><td>ბუღალტერი (ხელფასი + ტაბელი), 52 წლის; სამშენებლო მასალების დისტრიბუცია, 25 თანამშრომელი, ბარათის სისტემა 2015 წლიდან. ბუღალტრების Facebook ჯგუფი / ასოციაციის ღონისძიება.</td></tr>
+        <tr><th>როდის შეექმნა პრობლემა ბოლოს (მისი სიტყვებით)</th><td>ამ თვეში: საწყობის თანამშრომელმა ბიულეტენი 20 რიცხვის შემდეგ მოიტანა, როცა ხელფასი უკვე დათვლილი იყო: „ხელახლა მომიწია გადათვლა, ერთი საათი წავიდა, და წელს ეს ხუთჯერ მოხდა.“</td></tr>
+        <tr><th>საუკეთესო ციტატა</th><td class="quote">„ტაბელი? ორმოც წუთში ვაკეთებ. ბიულეტენი რომ დროზე მოიტანონ, ის მიშველის.“</td></tr>
+        <tr><th>რამ გაგვაკვირვა</th><td>კომპანია ზუსტად ჩვენს ფილტრშია, მაგრამ შეჯერების ტკივილი არ აქვს: კარის ლოგს წლებია არავინ გადმოწერს, ტაბელი 40 წუთია. დირექტორი: „ძველი თუ მუშაობს, ფულს არ გადაიხდის“.</td></tr>
+        <tr><th>ჩანაწერის ფოტო / აუდიოს ნიშნული</th><td><span class="todo">არ არსებობს</span> სიმულაცია; რეალურ ინტერვიუში ჩაიწერება.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="cards">
+    <div class="card">
+      <div class="card-h"><span class="n">#5</span><span class="t">გიორგი, ოპერაციების მენეჯერი, საცალო ქსელის სათაო ოფისი</span><span class="sim">სიმულაცია</span></div>
+      <table>
+        <tr><th>ინტერვიუერი</th><td>[წევრი 3] (დამკვირვებელი: [წევრი 1])</td></tr>
+        <tr><th>რესპონდენტი: როლი, ასაკი, სად ვიპოვეთ</th><td>ოპერაციების / ადმინისტრაციის მენეჯერი, 35 წლის; საცალო ქსელის სათაო ოფისი, 90 თანამშრომელი, S4A/ACB კარები. კოვორკინგის HR/ოპერაციების meetup, შემდეგ LinkedIn.</td></tr>
+        <tr><th>როდის შეექმნა პრობლემა ბოლოს (მისი სიტყვებით)</th><td>წინა თვის ტაბელი: „ასისტენტმა ექსპორტი 2 წუთში გააკეთა, მაგრამ მერე 9 საათი ზის და ხელით ასწორებს. მე ხუთ საათს ვუთმობ დავებს და ღამის ცვლებს.“ call center-ის ოპერატორი ჯარიმას არ დაეთანხმა: „ბარათი დამრჩა“.</td></tr>
+        <tr><th>საუკეთესო ციტატა</th><td class="quote">„ექსპორტი 2 წუთია. დანარჩენი 14 საათი იმის მტკიცებაა, რომ ექსპორტი ტყუის.“</td></tr>
+        <tr><th>რამ გაგვაკვირვა</th><td>ფინანსური დირექტორი (ვინც იხდის) ტაბელზე კი არა, აუდიტზე და „ვინ შევიდა სერვერის ოთახში“ კითხვაზე ფიქრობს. ტელეფონით check-in call center-ში უკვე განიხილეს და შეაჩერეს: თანამშრომლებმა „თვალთვალი“ დაარქვეს.</td></tr>
+        <tr><th>ჩანაწერის ფოტო / აუდიოს ნიშნული</th><td><span class="todo">არ არსებობს</span> სიმულაცია; რეალურ ინტერვიუში ჩაიწერება.</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-h"><span class="n">#6</span><span class="t">ზურა, კაფის მფლობელი (მეორადი სეგმენტი)</span><span class="sim">სიმულაცია</span></div>
+      <table>
+        <tr><th>ინტერვიუერი</th><td>[წევრი 3]</td></tr>
+        <tr><th>რესპონდენტი: როლი, ასაკი, სად ვიპოვეთ</th><td>მფლობელი, 41 წლის; კაფე საბურთალოზე, 7 თანამშრომელი, კარის სისტემა არ აქვს. პირდაპირ მივედით კაფეში დაბალი დატვირთვის საათზე (11:00-12:00).</td></tr>
+        <tr><th>როდის შეექმნა პრობლემა ბოლოს (მისი სიტყვებით)</th><td>„გასულ კვირას, ხუთშაბათს. დილის 8-ზე მიმტანი არ მოვიდა, არც დარეკა, არც დაწერა. [...] ბოლოს თვითონ დავდექი, 12 საათი ფეხზე ვიყავი. ბოლო თვეში ეს მესამედ მოხდა.“</td></tr>
+        <tr><th>საუკეთესო ციტატა</th><td class="quote">„საათებს რა უჭირს, ვითვლი. ის მითხარი, დილის 8-ზე მიმტანი რომ არ მოვა, ვინ დადგება.“</td></tr>
+        <tr><th>რამ გაგვაკვირვა</th><td>საათების დათვლა პრობლემა არ არის (~30 წთ კვირაში); ტკივილი ბოლო წუთის ჩანაცვლებაა. ფულს არ გადაიხდის („WhatsApp უფასოა“). მეზობელ საცხობს (12 კაცი, 2 ცვლა) „უფრო უჭირს“: გაგვაცნო.</td></tr>
+        <tr><th>ჩანაწერის ფოტო / აუდიოს ნიშნული</th><td><span class="todo">არ არსებობს</span> სიმულაცია; რეალურ ინტერვიუში ჩაიწერება.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 COMIC (landscape) ============ -->
+<section class="page landscape">
+  <div class="comic-wrap">
+    <div class="sec-head comic-head"><div class="sec-num">2</div><div><h2>კომიქსი: ერთი დღე მომხმარებლის ცხოვრებიდან</h2><div class="sub">6 კადრი, პრობლემაზე და არა გადაწყვეტაზე: ჩვენი პროდუქტი არცერთ კადრში არ ჩანს.</div></div>
+      <div class="comic-meta">
+      <div class="basis"><i class="fa-solid fa-user"></i> ვის ეფუძნება: <b>ინტერვიუ #03</b> (თამარი, 44, HR, კლინიკა, 60 თანამშრომელი)</div>
+      <div class="simbar"><b>სიმულაცია:</b> #03 სიმულირებულია, ამიტომ კადრი 5-ის ციტატაც. ჩაბარებამდე: რეალური რესპონდენტი და მისი ზუსტი სიტყვები.</div>
+    </div>
+    </div>
+    <div class="comic-img"><img src="comic/comic.png" alt="6-კადრიანი კომიქსი: თამარის დღე"></div>
+  </div>
+</section>
+
+<!-- ============ 3 PROTOTYPE ============ -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num">3</div><div><h2>ქაღალდის პროტოტიპი და ტესტი</h2><div class="sub">ერთი ამოცანა, 3 ტესტერი სეგმენტიდან, არაფერს ვუხსნით, ვაკვირდებით.</div></div></div>
+  <div class="simbar"><b>სიმულაცია:</b> პროტოტიპი და მისი ეკრანები რეალურია. ტესტერები (#1-#3) AI პერსონებია: კლიკები პროტოტიპში რეალურად გატარდა (Playwright), მაგრამ ციტატები, ემოციები და დრო გამოგონილია. ფოტო, სადაც ადამიანი პროტოტიპს იყენებს, ჯერ არ გვაქვს. ჩაბარებამდე: ტესტი 3 რეალურ HR/ადმინისტრაციის მენეჯერზე + ფოტო (თანხმობით).</div>
+  <table class="kv">
+    <tr><th>რა ავაწყვეთ და რისგან</th><td>5 ეკრანის დაწკაპუნებადი „ქაღალდის სტილის“ პროტოტიპი ერთ HTML ფაილში (ლეპტოპზე და ტელეფონზე იხსნება): <b>ცვლების გრაფიკი</b>, <b>დასტურები</b> (შვებულება ბალანსებით), <b>თვის დასწრება</b> გრაფიკთან შედარებით, <b>ზეგანაკვეთური</b> დანამატის ტარიფებით, <b>ტაბელის ექსპორტი</b> (XLSX/CSV) აუდიტის ჟურნალით. თითო ეკრანი ALL access-ის არსებულ ფუნქციას ასახავს; სახელები და რიცხვები გამოგონილია. საფუძველი: ინტერვიუ #03 და #05.</td></tr>
+    <tr><th>რა ამოცანა მივეცით ტესტერებს</th><td class="q">„დახურე ოქტომბერი ქირურგიული განყოფილებისთვის: 14 ოქტომბრის ღამის ცვლა გაიცვალა (ნინოს მაგივრად მაკომ იმუშავა), ერთი ექთანი 3 დღე ავად იყო. ბუღალტერს გაუგზავნე ტაბელი.“</td></tr>
+  </table>
+  <h3><i class="fa-solid fa-pen-ruler"></i> პროტოტიპი (რეალური ეკრანები)</h3>
+  <figure>
+    <img src="prototype/screens/01.png" alt="ცვლების გრაფიკი">
+    <figcaption><b>ეკრანი 1, ცვლები:</b> 14 ოქტომბრის ღამის უჯრა, „გადანიშვნა თანამშრომელზე“ (ნინო → მაკო). გაცვლას HR შეიყვანს გრაფიკში; თანამშრომლის მიერ გაცვლის მოთხოვნა ALL access-ში არ არის და არც დავხატეთ.</figcaption>
+  </figure>
+</section>
+
+<section class="page">
+  <figure style="margin-bottom:3mm">
+    <img src="prototype/screens/03.png" alt="თვის დასწრება">
+    <figcaption><b>ეკრანი 3, თვის დასწრება:</b> გრაფიკთან შედარებული ფაქტი, გადანიშნული ცვლა და 3 დღე ავადმყოფობა მონიშნულია, ქვემოთ გამონაკლისების სია.</figcaption>
+  </figure>
+  <div class="fig-row">
+    <figure style="flex: 0 0 104mm">
+      <img src="prototype/screens/05.png" alt="ტაბელის ექსპორტი">
+      <figcaption><b>ეკრანი 5, ექსპორტი:</b> XLSX ჩამოტვირთვა და აუდიტის ჟურნალი (ვინ, როდის, რა).</figcaption>
+    </figure>
+    <figure class="phone" style="flex: 0 0 34mm">
+      <img src="tests/prototype-tester-3/step-07.png" alt="ტესტერი 3 ტელეფონზე">
+      <figcaption><span class="sim">სიმულაცია</span> ტესტერი #3 (ნათია) ტელეფონზე, გაცვლის პანელი. ფოტოს ადგილს ჯერ ეკრანი იკავებს.</figcaption>
+    </figure>
+    <div class="photo-slot" style="flex: 1; align-self: stretch">
+      <div><i class="fa-solid fa-camera"></i><b>ფოტო: ადამიანი იყენებს პროტოტიპს</b><br><span class="todo">ჯერ არ გვაქვს</span><br>ჩასვით რეალური ტესტის ფოტო (თანხმობით; სახე შეიძლება არ ჩანდეს).</div>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <h3 style="margin-top:0"><i class="fa-solid fa-users"></i> ტესტერები <span class="sim">სიმულაცია</span></h3>
+  <table class="grid-t">
+    <thead><tr><th style="width:17%">ტესტერი</th><th style="width:26%">რა გააკეთა</th><th style="width:33%">სად დაიბნა ან გაჩერდა</th><th>რა თქვა (ციტატა)</th></tr></thead>
+    <tbody>
+      <tr><td class="who">#1 ქეთევანი, 39<br><span class="note" style="font-weight:400">უფროსი ექთანი და გრაფიკის შემდგენი, კერძო კლინიკა; ლეპტოპი</span></td>
+        <td>გაცვლა შეიყვანა ნინოს უჯრიდან („გადანიშვნა“), ავადმყოფობა დაადასტურა „დასტურებში“, შეამოწმა დასწრება, ჩამოტვირთა XLSX. ზეგანაკვეთური არ გახსნა.</td>
+        <td>ჯერ მაკოს ცარიელ უჯრაზე „დამატება“ სცადა (ნინოც დარჩებოდა, ორმაგი ჩანაწერი). ავადმყოფობა გრაფიკზე ეძება (2 არასწორი კლიკი). „ფაქტ.“ 156 vs „გრაფ.“ 180 ახსნის გარეშე. ჩამოტვირთვის შემდეგ გაგზავნა არ იყო.</td>
+        <td class="q">„და ახლა? ფოსტით თვითონ ვუგზავნი? ფაილი რას შეიცავს, ვერ ვხედავ.“</td></tr>
+      <tr><td class="who">#2 ლევანი, 33<br><span class="note" style="font-weight:400">HR და ადმინისტრაციის მენეჯერი, ლოჯისტიკის საწყობი, 55 კაცი; დესკტოპი</span></td>
+        <td>გაცვლა პირველივე ცდაზე, ავადმყოფობა „დასტურებში“ (თეამ თვითონ გამოგზავნა), XLSX ჩამოტვირთვა. ზეგანაკვეთური არ გახსნა.</td>
+        <td>ავადმყოფობა ჯერ „დასწრებაში“ ეძება, იქ ნახა წითელი „შეუსაბამობა“ და „0 ავადმყოფობა“. ღამის დანამატის რიცხვი არსად დაინახა. ლიკას გადაუწყვეტელი შვებულება ბეჯად „1“ დარჩა.</td>
+        <td class="q">„გაგზავნა სად არის? [...] ერთი ნაბიჯი ისევ ჩემზეა.“ / „მე ხომ არ მომიწევს 55 ადამიანის ჩაწერა?“</td></tr>
+      <tr><td class="who">#3 ნათია, 47<br><span class="note" style="font-weight:400">ადმინისტრაციის მენეჯერი, call center, 38 კაცი; ტელეფონი 390 px</span></td>
+        <td>ავადმყოფობა დაადასტურა, გაცვლა შეიყვანა, ნახა დასწრება, ზეგანაკვეთური და ექსპორტი, ჩამოტვირთა XLSX.</td>
+        <td>მენიუ და 31-დღიანი ცხრილი გვერდზე გადახვევადია მინიშნების გარეშე (14 რიცხვს 3 ცდით მიაგნო). წითელ „შეუსაბამობა“ ლეიბლებს აჭერდა, არაფერი ხდებოდა. ავადმყოფობას „შვებულება“ ეწერა. გაცვლა დასტურის გარეშე შეინახა.</td>
+        <td class="q">„თუ მხოლოდ მე ვწერ, ხომ ისევ მე ვმუშაობ?“ / „აუდიტის ჟურნალი ვინ ხედავს? [...] პერსონალი ამას თვალთვალს დაარქმევს.“</td></tr>
+    </tbody>
+  </table>
+  <p class="note" style="margin-top:2mm"><b>შედეგი (სიმულაცია):</b> გაცვლა და ავადმყოფობა 3/3, ექსპორტი 3/3, „ბუღალტერს გაგზავნა“ 0/3 (ასეთი ნაბიჯი პროტოტიპში არ არის). სამივე ფაილს გაგზავნამდე Excel-ში მაინც გადაამოწმებდა. სამივემ იკითხა, ვინ შეიყვანს მონაცემებს. დეტალები: <code>tests/prototype-test.md</code>.</p>
+
+  <h3><i class="fa-solid fa-wrench"></i> რას ვცვლით პროტოტიპში ტესტის შემდეგ</h3>
+  <p class="note"><span class="real">პროტოტიპი</span> ეკრანს ვასწორებთ ALL access-ის არსებული ფუნქციის ფარგლებში. <span class="todo">პროდუქტის კითხვა</span> ასეთი ფუნქცია დღეს არ არის ან არ ვიცით, არის თუ არა: ამას არ ვპირდებით, ჯერ რეალურ ტესტზე ვამოწმებთ, სჭირდებათ თუ არა.</p>
+  <table class="grid-t">
+    <thead><tr><th style="width:21%">რა ვნახეთ</th><th>რას ვცვლით</th></tr></thead>
+    <tbody>
+      <tr><td class="who">ბუღალტერთან გაგზავნის ნაბიჯი არ არის (3/3)</td><td><span class="real">პროტოტიპი</span> ექსპორტზე გულწრფელად: „ჩამოტვირთე და გაუგზავნე ბუღალტერს ელფოსტით“, ფაილის წინასწარი ნახვა (რა სვეტებია შიგნით). <span class="todo">პროდუქტის კითხვა</span> პირდაპირი გაგზავნა ბუღალტერთან დღეს ფუნქციად არ არის (არის CSV/XLSX და payroll API).</td></tr>
+      <tr><td class="who">ნდობა რიცხვებისადმი (3/3 Excel-ში გადაამოწმებდა)</td><td><span class="real">პროტოტიპი</span> ექსპორტის შეჯამებაში ციფრებით: ღამის საათები და ღამის დანამატი (ზეგანაკვეთურის ანგარიში დანამატის ტარიფით პროდუქტში არის, ეკრანზე არ ჩანდა). ექსპორტზე ეწერა „0 შეუსაბამობა“, დასწრებაზე კი 2 წითელი ჩანდა: ერთი რიცხვი ორივეგან ერთნაირად. „ფაქტ.“ სვეტი ეკრანზე ეტევა და სხვაობა ახსნილია (180 - 24 ავადმყოფობა = 156).</td></tr>
+      <tr><td class="who">ავადმყოფობა გრაფიკიდან ვერ იპოვეს (#1, #2)</td><td><span class="real">პროტოტიპი</span> გრაფიკის და დასწრების უჯრიდან ბმული „ავადმყოფობა / შვებულება“, რომელიც „დასტურებზე“ გადაიყვანს; ლეიბლი „ავადმყოფობა“ და არა „შვებულება“. <span class="todo">პროდუქტის კითხვა</span> შეუძლია თუ არა HR-ს ავადმყოფობა თანამშრომლის სახელით შეიყვანოს, გადასამოწმებელია.</td></tr>
+      <tr><td class="who">ვინ შეიყვანს? „თვალთვალის“ აღქმა (3/3)</td><td><span class="real">პროტოტიპი</span> მინიშნება „გამოგზავნა: თეა (თანამშრომელი), დადასტურება: თამარი (HR)“ და ერთი თანამშრომლის ეკრანი (<code>/my</code>, ტელეფონი); გულწრფელად: check-in მხოლოდ ოფისის Wi-Fi/IP-დან და ერთი მოწყობილობიდან, GPS არ არის. <span class="todo">პროდუქტის კითხვა</span> ვის უჩანს აუდიტის ჟურნალი; ღირს თუ არა პროდუქტი, როცა ფაქტს მხოლოდ HR შეიყვანს (ვარაუდი A16).</td></tr>
+      <tr><td class="who">მობილური (#3)</td><td><span class="real">პროტოტიპი</span> გადახვევის მინიშნება მენიუსა და ცხრილზე, ღილაკი „14 რიცხვზე / დღეს“, სახელების სვეტი ფიქსირებული, ამოცანის ბარათი დაკეცილი. წითელი ლეიბლი ან დასაჭერია (გასწორებაზე გადაყავს), ან ღილაკს აღარ ჰგავს. გაცვლის შენახვისას დადასტურება და „გაუქმება“.</td></tr>
+      <tr><td class="who">ორი გზა ერთი გაცვლისთვის (#1)</td><td><span class="real">პროტოტიპი</span> თუ იმ ღამეს უკვე ვინმე დგას, „დამატება“ გვთავაზობს „გადანიშვნას“ და აფრთხილებს ორმაგ ცვლაზე. <span class="todo">პროდუქტის კითხვა</span> თანამშრომლის მიერ გაცვლის მოთხოვნა არ არის; არ ვხატავთ, სანამ რეალური ტესტი არ აჩვენებს, რომ სჭირდებათ.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 4 POSTER ============ -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num">4</div><div><h2>პოსტერი და რეალური ტესტი</h2><div class="sub">პოსტი და სთორი ერთი ქმედებით: „დაჯავშნე 20 წუთი“.</div></div></div>
+  <div class="poster-row">
+    <figure><img src="poster/post-1080x1350.png" alt="პოსტი 1080x1350"><figcaption><b>პოსტი</b> (Facebook HR ჯგუფები, LinkedIn), 1080x1350</figcaption></figure>
+    <figure><img src="poster/story-1080x1920.png" alt="სთორი 1080x1920"><figcaption><b>სთორი</b> (Instagram/Facebook), 1080x1920</figcaption></figure>
+  </div>
+  <p class="note" style="margin:2mm 0 3mm"><b>ერთადერთი CTA:</b> „დაჯავშნე 20 წუთი: შენი გასული თვის ანონიმური ცვლების გრაფიკით ტაბელს ერთად ავაწყობთ.“ QR ჯერ placeholder-ია; გამოქვეყნებამდე იცვლება რეალური ფორმის ბმულით (სახელი + საკონტაქტო სავალდებულო). პოსტერის ტექსტი სიმულირებულ ინტერვიუებს ეყრდნობა (#02, #03, #05); „2 დღე“ რეალური ინტერვიუებით უნდა დადასტურდეს.</p>
+  <div class="prediction">
+    <div class="tag"><i class="fa-solid fa-lock"></i> პროგნოზი, ჩაწერილი გამოქვეყნებამდე (შედეგის შემდეგ არ იცვლება) <span class="real">რეალური</span></div>
+    <blockquote>ცვლებით მომუშავე კომპანიების HR/ადმინისტრაციის მენეჯერების <b>სულ მცირე 3%</b>, ვინც პოსტს ნახავს, <b>7 დღეში</b> 20-წუთიან შეხვედრას დაჯავშნის (~300 ნახვაზე <b>სულ მცირე 9 ჯავშანი</b>). 9 ან მეტი: ვაგრძელებთ ამ პრობლემითა და სეგმენტით. 9-ზე ნაკლები: რამის აშენებამდე ვცვლით მესიჯს ან სეგმენტს.</blockquote>
+    <div class="en">ორიგინალი, როგორც ჩაიწერა: “At least 3% of HR/admin managers in shift-based companies who see the post will book a 20-minute slot within 7 days (with ~300 views, at least 9 bookings). 9 or more: continue with this problem and segment. Fewer than 9: change the message or the segment before building anything.”</div>
+  </div>
+</section>
+
+<section class="page">
+  <h3 style="margin-top:0"><i class="fa-solid fa-chart-simple"></i> რეალური ტესტის შედეგი <span class="todo">ჯერ არ ჩატარებულა</span></h3>
+  <table class="kv">
+    <tr><th>პროგნოზი (გამოქვეყნებამდე): რამდენი პროცენტი, ვინ და რას გააკეთებს</th><td>≥3% სეგმენტიდან, 7 დღეში, 20-წუთიანი ჯავშანი; ~300 ნახვაზე ≥9 ჯავშანი (იხ. წინა გვერდი).</td></tr>
+    <tr><th>სად გაავრცელეთ და რამდენი ხნით</th><td>გეგმა: 2 Facebook HR საზოგადოების ჯგუფი + LinkedIn პოსტი თითოეული წევრისგან (3) + სთორი; 7 დღე ერთსა და იმავე დღეს დაწყებით. დაწყება: <span class="blank">[თარიღი]</span>, დასრულება: <span class="blank">[თარიღი]</span>.</td></tr>
+    <tr><th>რამდენმა ნახა (რიცხვი)</th><td><span class="blank">[შეავსეთ რეალური რიცხვით: Facebook „Seen by“, LinkedIn Impressions, Instagram Accounts reached]</span></td></tr>
+    <tr><th>რამდენმა გააკეთა ქმედება (რიცხვი)</th><td><span class="blank">[შეავსეთ: მხოლოდ შევსებული ფორმა, სეგმენტიდან; მეგობრები არ ითვლება]</span></td></tr>
+    <tr><th>გამართლდა პროგნოზი? რას ნიშნავს ეს ჩვენთვის?</th><td><span class="blank">[შეავსეთ შედეგის შემდეგ: ჯავშნები / ნახვები = %, შედარება 3%-თან და 9 ჯავშანთან]</span></td></tr>
+  </table>
+
+  <div class="fig-row" style="margin-top:3mm">
+    <div class="photo-slot" style="flex:1; height:42mm"><div><i class="fa-solid fa-image"></i><b>შედეგის სკრინშოტი</b> (insights + ფორმის პასუხები)<br><span class="todo">ჯერ არ გვაქვს</span></div></div>
+  </div>
+
+  <div class="simpanel" style="margin-top:4mm">
+    <h4><i class="fa-solid fa-flask"></i> სიმულირებული წინასწარი ტესტი: 24 გამოგონილი მნახველი <span class="sim">სიმულაცია</span></h4>
+    <p class="note" style="color:#5a4400">ეს <b>არ არის</b> ნახვები, ჯავშნები ან მტკიცებულება. პოსტერი AI პანელს ვაჩვენეთ, რომ გამოქვეყნებამდე სუსტი ადგილები გვეპოვა. ზემოთ რეალური ველები ამ რიცხვებით <b>არ</b> ივსება.</p>
+    <div class="funnel">
+      <div><b>8 / 24</b><small>გადახედა (სეგმენტში / სულ)</small></div>
+      <div><b>6 / 12</b><small>წაიკითხა</small></div>
+      <div><b>3 / 7</b><small>დააჭირა QR-ს / საიტს</small></div>
+      <div><b>1 / 2</b><small>დაჯავშნა (1 ითვლება)</small></div>
+    </div>
+    <p class="note" style="color:#5a4400">სეგმენტში 1/8 (12,5%), მაგრამ 1 ჯავშნის 95%-იანი ინტერვალი 8-დან ~0,3%-53%-ია: პანელი 9-ის ზღვარს ვერ ამტკიცებს. სკეპტიკური ვარაუდით (ცივი B2B პოსტი 1-2%) ~300 ნახვაზე 3-6 ჯავშანი, ანუ ზღვარს ვერ გადის.</p>
+    <p class="note" style="color:#5a4400;margin:0"><b>პანელიდან გამოქვეყნებამდე შესწორება:</b> (1) სათაურში ადრესატი („ცვლებით მომუშავე HR“) და ერთი ხაზი, ვინ ვართ და რომ 20 წუთი გაყიდვა არ არის; (2) ფორმაში 2 სავალდებულო ველი (სახელი, კონტაქტი), ერთი გზა (ბმული ან QR); (3) „2 დღე“ მხოლოდ რეალური ინტერვიუებით დადასტურების შემდეგ.</p>
+  </div>
+</section>
+
+<!-- ============ 5 LEARNED ============ -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num">5</div><div><h2>რა ვისწავლეთ</h2><div class="sub">Value Proposition Canvas ადრე და შემდეგ: იგივე ფურცელი, გადახაზული და დამატებული. ფოტოს ნაცვლად ციფრული ტილოები.</div></div></div>
+
+  <div class="vpc-title"><h3>ადრე: Week 1-ის ჰიპოთეზა (ინტერვიუებამდე)</h3><span class="real">ჩვენი ჰიპოთეზა</span></div>
+  <div class="vpc">
+    <div class="vpc-col"><h5><i class="fa-solid fa-square"></i> ღირებულების რუკა (კვადრატი): ჩვენი შეთავაზება</h5><div class="vmap">
+      <div class="prod"><div class="lbl"><i class="fa-solid fa-box"></i> პროდუქტი</div>
+        <p class="it">ALL access: S4A/ACB კონტროლერების მართვა</p><p class="it">დასწრება</p><p class="it">ტაბელის ექსპორტი</p></div>
+      <div class="gc"><div class="lbl"><i class="fa-solid fa-arrow-trend-up"></i> სარგებლის შემქმნელი</div>
+        <p class="it">CSV/XLSX ექსპორტი, payroll API</p><p class="it">hash-chain აუდიტის ჟურნალი</p><p class="it">აუდიტირებული offboarding</p></div>
+      <div class="pr"><div class="lbl"><i class="fa-solid fa-kit-medical"></i> ტკივილის შემამსუბუქებელი</div>
+        <p class="it">კარის მოვლენები ფასდება გრაფიკთან</p><p class="it">ლენტა „რატომ არ შეუშვა“, თვის ცხრილი</p><p class="it">offboarding-ის წინასწარი ნახვა: ბარათი + ლოგინი ერთად</p></div>
+    </div></div>
+    <div class="vpc-col"><h5><i class="fa-solid fa-circle"></i> მომხმარებლის პროფილი (წრე)</h5><div class="cprof">
+      <div class="gains"><div class="lbl"><i class="fa-solid fa-face-smile"></i> სარგებელი</div>
+        <p class="it">ტაბელი წუთებში</p><p class="it">ერთი წყარო, დავა ფაქტით მთავრდება</p><p class="it">ჩანაწერი, რომ წვდომა გაითიშა</p></div>
+      <div class="pains"><div class="lbl"><i class="fa-solid fa-face-frown"></i> ტკივილი</div>
+        <p class="it">კარის ლოგისა და Excel-ის ხელით შეჯერება</p><p class="it">დავა დაგვიანებასა და გამოტოვებულ შესვლაზე</p><p class="it">არ ვიცით, წასულის ბარათი გაითიშა თუ არა</p></div>
+      <div class="jobs"><div class="lbl"><i class="fa-solid fa-briefcase"></i> სამუშაო</div>
+        <p class="it">თვის ბოლოს ტაბელი ბუღალტერს დავის გარეშე</p><p class="it">წასულს კარი აღარ ეღება</p></div>
+    </div></div>
+  </div>
+
+  <div class="vpc-title" style="margin-top:4mm"><h3>შემდეგ: 6 ინტერვიუს და ტესტების მერე</h3><span class="sim">სიმულაცია</span></div>
+  <div class="vpc">
+    <div class="vpc-col"><h5><i class="fa-solid fa-square"></i> ღირებულების რუკა (კვადრატი): ჩვენი შეთავაზება</h5><div class="vmap">
+      <div class="prod"><div class="lbl"><i class="fa-solid fa-box"></i> პროდუქტი</div>
+        <p class="it x">S4A/ACB როგორც ცენტრი</p><p class="it new">Team გეგმა + ცვლების დამატება</p><p class="it new">წვდომის კონტროლი მხოლოდ S4A/ACB-ზე, მყიდველისთვის (05)</p></div>
+      <div class="gc"><div class="lbl"><i class="fa-solid fa-arrow-trend-up"></i> სარგებლის შემქმნელი</div>
+        <p class="it">CSV/XLSX ექსპორტი, payroll API</p><p class="it new">თვის ცხრილი + აუდიტი: „ვინ იყო იმ ღამეს?“</p><p class="it gap">GPS არა, მხოლოდ Wi-Fi/IP: საკმარისია? გაურკვეველი</p></div>
+      <div class="pr"><div class="lbl"><i class="fa-solid fa-kit-medical"></i> ტკივილის შემამსუბუქებელი</div>
+        <p class="it x">კარის მოვლენები გრაფიკთან</p><p class="it new">ცვლები/როტაციები + დასწრების დაფა გრაფიკთან</p><p class="it new">ზეგანაკვეთური დანამატის ტარიფით</p><p class="it new">შვებულება ბალანსებით, ერთი inbox</p><p class="it gap">ხარვეზი: გაცვლის მოთხოვნა არ გვაქვს</p></div>
+    </div></div>
+    <div class="vpc-col"><h5><i class="fa-solid fa-circle"></i> მომხმარებლის პროფილი (წრე)</h5><div class="cprof">
+      <div class="gains"><div class="lbl"><i class="fa-solid fa-face-smile"></i> სარგებელი</div>
+        <p class="it x">ტაბელი წუთებში</p><p class="it new">ტაბელი საათებში, ხელფასი დროზე (03)</p><p class="it new">„ვინ იყო იმ ღამეს?“ წუთებში (03, 05)</p><p class="it new">თანამშრომლები არ „აჯანყდნენ“ (03, 05)</p></div>
+      <div class="pains"><div class="lbl"><i class="fa-solid fa-face-frown"></i> ტკივილი</div>
+        <p class="it x">კარის ლოგის შეჯერება (02, 03, 04)</p><p class="it x">დავა დაგვიანებაზე (01, 04)</p><p class="it new">გაცვლები ჩატებშია, ხელით აღდგება (01-03)</p><p class="it new">ზეგანაკვეთური/ღამე ხელით, დავა კომპრომისით (02, 03, 05)</p><p class="it new">შვებულების ნაშთი ცალკე Excel-ში (03, 04)</p></div>
+      <div class="jobs"><div class="lbl"><i class="fa-solid fa-briefcase"></i> სამუშაო</div>
+        <p class="it x">წასულს კარი აღარ ეღება (HR-ისთვის)</p><p class="it new">გაარკვიოს, ვინ რეალურად იმუშავა თითო ცვლა</p><p class="it new">ტაბელი, რომელიც დავას გაუძლებს (02, 03, 05)</p></div>
+    </div></div>
+  </div>
+  <div class="legend"><span><span class="x">გადახაზული</span> არ გამართლდა</span><span><span class="new">მწვანე</span> ახალი</span><span><span class="gap">დახრილი</span> ხარვეზი / გაურკვეველი</span><span>ფრჩხილებში: ინტერვიუ #</span></div>
+</section>
+
+<section class="page">
+  <h3 style="margin-top:0"><i class="fa-solid fa-lightbulb"></i> ველები <span class="sim">სიმულაცია</span></h3>
+  <table class="kv">
+    <tr><th>სამი ყველაზე დიდი სიურპრიზი ამ კვირაში (წყაროთი)</th><td>
+      <p><b>1. კარის ლოგი ტაბელის წყარო არ არის.</b> მთელი ჰიპოთეზა ლოგზე იდგა, მაგრამ ის არასანდოა („ერთი ასკანერებს“), მხოლოდ ზოგ კარზეა, ან წლებია არავის გადმოუწერია. მხოლოდ ერთი იყენებს. <span class="src">წყარო: ინტერვიუ #02, #03, #04 (საპირისპირო: #05)</span></p>
+      <p><b>2. თანამშრომლები აღრიცხვას ეწინააღმდეგებიან, და ეს ჩვენს check-in-ს ეხება.</b> call center-მა ტელეფონით check-in „თვალთვალის“ გამო შეაჩერა, ექიმებმა თითის სკანერი უარყვეს („ჩვენ ბავშვები ვართ?“), საწყობში ძველი ტელეფონებია. პროტოტიპზე სამივე ტესტერმა იკითხა „ვინ შეიყვანს?“. <span class="src">წყარო: ინტერვიუ #05, #03, #02; პროტოტიპი</span></p>
+      <p style="margin:0"><b>3. ვინც იხდის, სხვა ტკივილი აქვს, ვიდრე ვინც იყენებს.</b> ფინანსურ დირექტორს აუდიტი და „ვინ შევიდა სერვერის ოთახში“ აინტერესებს, არა ტაბელი; დირექტორი „ძველი თუ მუშაობს, ფულს არ გადაიხდის“; ფილტრში ზუსტად მოხვედრილ კომპანიას ტაბელი 40 წუთი სჭირდება. <span class="src">წყარო: ინტერვიუ #05, #04</span></p>
+    </td></tr>
+    <tr><th>პრობლემის ფორმულირება ახლა (იგივე ფორმულით)</th><td><b>[ვინ]</b> თბილისის 20-100 თანამშრომლიანი, ცვლებით მომუშავე კომპანიის (კლინიკა, საწყობი, call center) HR ან ადმინისტრაციის მენეჯერი, <b>როცა</b> თვის ბოლოს ხელფასისთვის ტაბელს ხურავს, <b>ცდილობს</b> გაარკვიოს, ვინ რეალურად იმუშავა თითოეული ცვლა (გაცვლების, ღამის, ზეგანაკვეთურის და შვებულების ჩათვლით), <b>მაგრამ</b> გრაფიკი ერთ Excel-შია, ხოლო გაცვლები და გამონაკლისები WhatsApp/Viber-ში, ქაღალდის ჟურნალებსა და ცალკე ცხრილებშია მიმოფანტული. <b>ახლა იყენებს</b> Excel-ის გრაფიკს, ჩატების ხელით გადაკითხვას და ცვლის უფროსების ჟურნალებს, <b>რაც</b> თვეში 1-2 სამუშაო დღეს ჭამს და დავას ფაქტის გარეშე, კომპრომისით ამთავრებს. <span class="src">(#02, #03, #05; ნაწილობრივ #01)</span></td></tr>
+  </table>
+
+  <div class="decision" style="margin-top:4mm">
+    <div style="font-size:8.4pt;color:#aab3cf;font-weight:700">შემდეგი ნაბიჯი: ვაგრძელებთ / ვცვლით სეგმენტს / ვცვლით პრობლემას / ვცვლით გადაწყვეტას</div>
+    <div class="big"><i class="fa-solid fa-arrows-turn-right"></i> ვცვლით პრობლემას (და ვავიწროებთ სეგმენტის ფილტრს)</div>
+    <p style="margin:1.5mm 0 0;font-size:8.9pt">ჩვენივე Week 1-ის ზღვარმა ვერ გაიარა: კარის ლოგის შეჯერება მხოლოდ 2/6-ში, რეალური ექსპორტი 0/6. ხუთიდან ოთხ ძირითად ინტერვიუში ტკივილი არის უფსკრული გრაფიკსა და რეალურად ნამუშევარ ცვლას შორის, ამიტომ როლი იგივე რჩება, მაგრამ ფილტრი „აქვს კარის სისტემა“ იცვლება ფილტრით „მუშაობს ცვლებით“. გადაწყვეტას ჯერ არ ვცვლით (ცვლები, დასწრება გრაფიკთან, შვებულება, ზეგანაკვეთური და ექსპორტი ახალ პრობლემას ერგება), მაგრამ ყველაზე სარისკო ვარაუდს (ფაქტს ვინ შეიყვანს ისე, რომ თანამშრომლები არ „აჯანყდნენ“) რეალური ტესტებით ვამოწმებთ.</p>
+    <p style="margin:1.5mm 0 0;font-size:8.2pt;color:#cfd6ea"><b style="color:var(--lime)">სიმულაცია:</b> ეს გადაწყვეტილება სიმულირებულ ინტერვიუებზე დგას. ის ძალაში რჩება მხოლოდ მაშინ, თუ რეალური ინტერვიუები იგივეს აჩვენებს. ეშმაკის ადვოკატის ქულა (სიმულაციით): 9/14, „სუსტი წერტილები“: პრობლემის მხარე ძლიერია, ფულის მხარე სუსტი (ფულის commitment 0/6).</p>
+  </div>
+
+  <h3><i class="fa-solid fa-calendar-week"></i> შემდეგი 7 დღე</h3>
+  <ol class="redo">
+    <li>6 რეალური ინტერვიუ ახალ სეგმენტში (კლინიკები, საწყობები, call center-ები), 2 თითო წევრზე, აუდიოს ნიშნულით; #03-ისა და #05-ის გაცნობები და Facebook HR ჯგუფი.</li>
+    <li>პროტოტიპის შესწორება (ნაწილი 3) და ტესტი 3 რეალურ ტესტერზე, ფოტოთი და ჟურნალით.</li>
+    <li>პოსტერის შესწორება და 7-დღიანი რეალური გამოქვეყნება; შედეგის შედარება წინასწარ ჩაწერილ პროგნოზთან (≥3%, ≥9 ჯავშანი).</li>
+    <li>კომიქსის კადრი 5: რეალური რესპონდენტის ციტატა; VPC „შემდეგ“ და სიურპრიზები რეალური მონაცემით.</li>
+  </ol>
+</section>
+
+<!-- ============ CHECKLIST ============ -->
+<section class="page">
+  <div class="sec-head"><div class="sec-num"><i class="fa-solid fa-list-check" style="font-size:12pt"></i></div><div><h2>ჩაბარებამდე შეამოწმეთ</h2><div class="sub">გულწრფელი მდგომარეობა 2026-10-30-ის მიხედვით. მონიშნულია მხოლოდ ის, რაც მართლა გაკეთებულია.</div></div></div>
+  <table class="check">
+    <tr><td class="ic part"><i class="fa-solid fa-square-minus"></i></td><td class="st part">ნაწილობრივ</td><td><b>პასპორტის ყველა ველი შევსებულია.</b> 7 ველი შევსებულია; გუნდის წევრების სახელები ჯერ placeholder-ებია ([წევრი 1-3]).</td></tr>
+    <tr><td class="ic no"><i class="fa-regular fa-square"></i></td><td class="st no">მოლოდინში</td><td><b>თითოეულ წევრს მინიმუმ 2 ინტერვიუს ბარათი აქვს საკუთარი სახელით.</b> 6 ბარათი არის (2 თითო წევრზე), მაგრამ ინტერვიუები სიმულირებულია და სახელები placeholder-ებია. საჭიროა 6 რეალური ინტერვიუ.</td></tr>
+    <tr><td class="ic ok"><i class="fa-solid fa-square-check"></i></td><td class="st ok">შესრულებულია</td><td><b>კომიქსს 6 კადრი აქვს და მითითებულია, რომელ ინტერვიუს ეფუძნება</b> (#03). შენიშვნა: #03 სიმულაციაა, ამიტომ კადრი 5-ის ციტატა რეალური ინტერვიუთი უნდა ჩანაცვლდეს.</td></tr>
+    <tr><td class="ic no"><i class="fa-regular fa-square"></i></td><td class="st no">მოლოდინში</td><td><b>პროტოტიპი 3 ადამიანზეა გამოცდილი და ფოტოები ჩასმულია.</b> პროტოტიპი და მისი ეკრანები მზადაა; ტესტი მხოლოდ 3 AI ტესტერზე ჩატარდა. ფოტო, სადაც რეალური ადამიანი იყენებს, არ გვაქვს.</td></tr>
+    <tr><td class="ic part"><i class="fa-solid fa-square-minus"></i></td><td class="st part">ნაწილობრივ</td><td><b>პოსტერის პროგნოზი გამოქვეყნებამდე ჩაიწერა და შედეგის სკრინშოტი ჩასმულია.</b> პროგნოზი ჩაწერილია (≥3%, ≥9 ჯავშანი, 7 დღე). პოსტერი ჯერ არ გამოქვეყნებულა, რეალური ნახვები, ჯავშნები და სკრინშოტი არ არის.</td></tr>
+    <tr><td class="ic ok"><i class="fa-solid fa-square-check"></i></td><td class="st ok">შესრულებულია</td><td><b>ფაილის სახელი: სტარტაპის სახელი_PSF.pdf</b> (AllAccess_PSF.pdf).</td></tr>
+  </table>
+  <p class="note" style="margin-top:3mm">ჯამი: 2 შესრულებულია, 2 ნაწილობრივ, 2 მოლოდინში. სანამ რეალური ინტერვიუები, ტესტები და გამოქვეყნება არ ჩატარდება, ეს ფაილი სამუშაო ვერსიაა და არა საბოლოო მტკიცებულება.</p>
+
+  <div class="simbox" style="margin-top:5mm">
+    <h2><i class="fa-solid fa-rotate"></i> გუნდისთვის: რა უნდა გაკეთდეს რეალურ ადამიანებთან</h2>
+    <ol class="redo">
+      <li>6 ინტერვიუ (თითო წევრზე 2) სეგმენტიდან, არა მეგობრები; ბარათები რეალური ციტატით, „სად ვიპოვეთ“ და აუდიოს დროის ნიშნულით ან ჩანაწერის ფოტოთი.</li>
+      <li>კომიქსი: კადრი 5-ში რეალური რესპონდენტის ზუსტი სიტყვები და მისი ინტერვიუს ნომერი.</li>
+      <li>პროტოტიპის ტესტი 3 რეალურ ტესტერზე: რა გააკეთა, სად გაჩერდა, ციტატა; ფოტო, სადაც პროტოტიპს იყენებს (თანხმობით).</li>
+      <li>პოსტერი 7 დღე რეალურ არხებში; ნახვები, ჯავშნები, შედეგის სკრინშოტი; შედარება უცვლელ პროგნოზთან.</li>
+      <li>VPC „შემდეგ“, სამი სიურპრიზი, პრობლემის ფორმულირება და შემდეგი ნაბიჯი რეალური მონაცემით; ყველა <span class="sim">სიმულაცია</span> ნიშნის მოხსნა მხოლოდ მაშინ, როცა შინაარსი რეალურით ჩანაცვლდა.</li>
+    </ol>
+  </div>
+</section>
+
+</body>
+</html>
