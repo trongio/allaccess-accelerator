@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ALL access: ტაბელი 20 წუთში</title>
+<link rel="stylesheet" href="../../../vendor/fontawesome/css/all.css">
+<style>
+  :root {
+    --ink: #0a1430;
+    --ink-2: #111f47;
+    --ink-3: #1c2d5e;
+    --line: rgba(255,255,255,.14);
+    --paper: #f4f6fb;
+    --white: #ffffff;
+    --muted: #a9b4d0;
+    --accent: #d9ff3d;
+    --accent-ink: #0a1430;
+    --font: "Noto Sans Georgian", "Noto Serif Georgian", sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { font-family: var(--font); background: #e7ebf4; color: var(--ink); line-height: 1.4; }
+
+  /* ---------- page shell ---------- */
+  .page-head { max-width: 1240px; margin: 0 auto; padding: 32px 16px 8px; display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline; justify-content: space-between; }
+  .page-head h1 { font-size: 20px; font-weight: 700; }
+  .page-head p { font-size: 14px; color: #4a5678; }
+  .boards { max-width: 1240px; margin: 0 auto; padding: 16px; display: flex; gap: 32px; align-items: flex-start; justify-content: center; }
+  .board-wrap { flex: 0 0 auto; }
+  .board-wrap figcaption { font-size: 13px; color: #4a5678; margin-top: 10px; text-align: center; }
+  .board-frame { overflow: hidden; border-radius: 6px; box-shadow: 0 20px 50px rgba(10,20,48,.28); }
+  @media (max-width: 860px) { .boards { flex-direction: column; align-items: center; } }
+
+  /* ---------- artboards (real pixel size, scaled by JS for display) ---------- */
+  .artboard {
+    position: relative; overflow: hidden; color: var(--white);
+    background:
+      radial-gradient(1200px 700px at 110% -10%, rgba(217,255,61,.10), transparent 60%),
+      linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 100%);
+    font-family: var(--font);
+  }
+  .artboard::before { /* faint grid texture, like a roster sheet */
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 90px 90px; opacity: .25;
+    mask-image: linear-gradient(180deg, #000 0%, transparent 55%);
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 55%);
+  }
+  .artboard > * { position: relative; }
+  .post  { width: 1080px; height: 1350px; padding: 72px 80px 64px; display: flex; flex-direction: column; }
+  .story { width: 1080px; height: 1920px; padding: 200px 80px 220px; display: flex; flex-direction: column; }
+
+  .topbar { display: flex; justify-content: space-between; align-items: center; }
+  .wordmark { font-family: "Arial Black", "Helvetica Neue", Arial, sans-serif; font-weight: 900; font-size: 40px; letter-spacing: -1px; line-height: 1; white-space: nowrap; }
+  .wordmark b { color: var(--accent); font-weight: 900; }
+  .wordmark span { font-weight: 700; }
+  .kicker { font-size: 24px; font-weight: 600; color: var(--muted); border: 2px solid var(--line); border-radius: 999px; padding: 8px 22px; white-space: nowrap; }
+
+  .headline { font-weight: 800; letter-spacing: -.5px; line-height: 1.12; }
+  .post  .headline { font-size: 74px; margin-top: 52px; }
+  .story .headline { font-size: 84px; margin-top: 40px; }
+  .headline em { font-style: normal; color: var(--accent); }
+  .sub { font-weight: 600; color: var(--white); opacity: .92; }
+  .post  .sub { font-size: 36px; margin-top: 20px; }
+  .story .sub { font-size: 42px; margin-top: 26px; }
+  .sub mark { background: none; color: var(--accent); }
+
+  .roster { display: block; width: 100%; flex: 0 0 auto; }
+  .post  .roster { margin-top: 30px; height: 262px; }
+  .story .roster { margin-top: 36px; height: 250px; }
+
+  .pains { list-style: none; }
+  .pains li { display: flex; gap: 20px; align-items: baseline; font-weight: 500; color: #dfe5f5; }
+  .pains li i { flex: 0 0 1.4em; text-align: center; color: var(--accent); --fa-primary-color: var(--accent); --fa-secondary-color: var(--accent); --fa-secondary-opacity: .45; }
+  .cta-title i { margin-right: .25em; font-size: .8em; }
+  .post  .pains { margin-top: 30px; }
+  .post  .pains li { font-size: 30px; }
+  .post  .pains li + li { margin-top: 12px; }
+  .story .pains { margin-top: 36px; }
+  .story .pains li { font-size: 33px; }
+  .story .pains li + li { margin-top: 18px; }
+
+  .cta { margin-top: auto; background: var(--accent); color: var(--accent-ink); border-radius: 28px; display: flex; align-items: center; gap: 36px; }
+  .post  .cta { padding: 36px 36px 36px 44px; }
+  .story .cta { padding: 40px 44px; flex-direction: column; align-items: stretch; gap: 28px; }
+  .cta { flex: 0 0 auto; }
+  .pains { flex: 0 0 auto; margin-bottom: 36px; }
+  .cta-text { flex: 1; }
+  .cta-title { font-weight: 800; line-height: 1.05; letter-spacing: -.5px; }
+  .cta-title { white-space: nowrap; }
+  .post  .cta-title { font-size: 52px; }
+  .story .cta-title { font-size: 64px; }
+  .cta-line { font-weight: 600; margin-top: 14px; line-height: 1.3; }
+  .post  .cta-line { font-size: 26px; }
+  .story .cta-line { font-size: 32px; margin-top: 20px; }
+  .cta-url { font-weight: 800; margin-top: 14px; font-family: "Arial Black", Arial, sans-serif; }
+  .post  .cta-url { font-size: 24px; }
+  .story .cta-url { font-size: 32px; }
+  .story .cta-row { display: flex; gap: 40px; align-items: center; }
+  .story .cta-row .cta-line { margin-top: 0; flex: 1; }
+
+  .qr { flex: 0 0 auto; background: #fff; border-radius: 16px; padding: 14px 14px 10px; text-align: center; }
+  .post .qr { width: 196px; }
+  .story .qr { width: 220px; }
+  .qr svg { display: block; width: 100%; height: auto; }
+  .qr small { display: block; font-size: 15px; font-weight: 700; line-height: 1.2; margin-top: 8px; color: var(--ink); }
+
+  /* ---------- landing / mock form ---------- */
+  .landing { max-width: 720px; margin: 48px auto 64px; padding: 0 16px; }
+  .card { background: #fff; border-radius: 18px; padding: 36px 32px; box-shadow: 0 10px 30px rgba(10,20,48,.10); }
+  .card .wordmark { font-size: 24px; color: var(--ink); }
+  .card .wordmark b { color: var(--ink); background: var(--accent); padding: 0 4px; border-radius: 4px; }
+  .card h2 { font-size: 28px; line-height: 1.25; margin-top: 18px; }
+  .card .lede { color: #4a5678; margin-top: 10px; font-size: 16px; }
+  form { margin-top: 24px; display: grid; gap: 18px; }
+  label { display: grid; gap: 6px; font-weight: 600; font-size: 15px; }
+  input, select { font: inherit; font-weight: 400; font-size: 16px; padding: 12px 14px; border: 1.5px solid #c9d1e4; border-radius: 10px; background: #fff; color: var(--ink); width: 100%; }
+  input:focus, select:focus { outline: 3px solid rgba(217,255,61,.9); outline-offset: 1px; border-color: var(--ink); }
+  button { font: inherit; font-weight: 800; font-size: 18px; padding: 16px; border: 0; border-radius: 12px; background: var(--ink); color: var(--accent); cursor: pointer; }
+  button:hover { background: var(--ink-3); }
+  .fine { font-size: 13px; color: #6a7593; }
+  .thanks { display: none; text-align: center; padding: 24px 0 8px; }
+  .thanks h3 { font-size: 26px; }
+  .thanks p { color: #4a5678; margin-top: 8px; }
+  .card.done form { display: none; }
+  .card.done .thanks { display: block; }
+  .note { font-size: 13px; color: #4a5678; margin-top: 14px; }
+  @media (max-width: 600px) { .card { padding: 28px 20px; } .card h2 { font-size: 22px; } }
+
+  /* ---------- export mode: ?only=post or ?only=story ---------- */
+  body.export { background: var(--ink); }
+  body.export .page-head, body.export .landing, body.export figcaption { display: none; }
+  body.export .boards { padding: 0; max-width: none; display: block; }
+  body.export .board-frame { border-radius: 0; box-shadow: none; }
+  body.export .board-wrap { display: none; }
+  body.export .board-wrap.on { display: block; }
+</style>
+</head>
+<body>
+
+<header class="page-head">
+  <h1>ALL access: პოსტერი და სთორი (PSF, ნაწილი 4)</h1>
+  <p>ერთი ქმედების მოწოდება · ტექსტი ეფუძნება სიმულირებულ ინტერვიუებს (სიმულაცია)</p>
+</header>
+
+<!-- shared illustration: a roster where the night shift of the 14th was swapped in a chat -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="roster" viewBox="0 0 920 395">
+    <g font-family="Noto Sans Georgian, sans-serif">
+      <!-- header -->
+      <text x="0" y="30" fill="#a9b4d0" font-size="22" font-weight="600">ოქტომბერი</text>
+      <g fill="#a9b4d0" font-size="22" font-weight="700" text-anchor="middle">
+        <text x="255" y="30">13</text><text x="445" y="30" fill="#d9ff3d">14</text><text x="635" y="30">15</text><text x="825" y="30">16</text>
+      </g>
+      <!-- names -->
+      <g fill="#ffffff" font-size="26" font-weight="600">
+        <text x="0" y="96">ნინო</text><text x="0" y="176">მაკო</text><text x="0" y="256">ანა</text>
+      </g>
+      <!-- cells: row y = 56 / 136 / 216, height 60; col x = 165 / 355 / 545 / 735, width 180 -->
+      <g font-size="22" font-weight="600" text-anchor="middle">
+        <!-- Nino -->
+        <rect x="165" y="56" width="180" height="60" rx="10" fill="#26386e"/><text x="255" y="94" fill="#dfe5f5">დღე</text>
+        <rect x="355" y="56" width="180" height="60" rx="10" fill="#0b1636" stroke="#3a4d86" stroke-width="2"/>
+        <text x="445" y="94" fill="#8592b5">ღამე</text>
+        <line x1="400" y1="86" x2="490" y2="86" stroke="#ff6b6b" stroke-width="4" stroke-linecap="round"/>
+        <rect x="545" y="56" width="180" height="60" rx="10" fill="none" stroke="#2a3a6b" stroke-width="2" stroke-dasharray="6 8"/>
+        <rect x="735" y="56" width="180" height="60" rx="10" fill="#26386e"/><text x="825" y="94" fill="#dfe5f5">დღე</text>
+        <!-- Mako -->
+        <rect x="165" y="136" width="180" height="60" rx="10" fill="none" stroke="#2a3a6b" stroke-width="2" stroke-dasharray="6 8"/>
+        <rect x="355" y="136" width="180" height="60" rx="10" fill="none" stroke="#d9ff3d" stroke-width="3" stroke-dasharray="10 8"/>
+        <text x="445" y="177" fill="#d9ff3d" font-size="34" font-weight="800">?</text>
+        <rect x="545" y="136" width="180" height="60" rx="10" fill="#26386e"/><text x="635" y="174" fill="#dfe5f5">დღე</text>
+        <rect x="735" y="136" width="180" height="60" rx="10" fill="#0b1636" stroke="#3a4d86" stroke-width="2"/><text x="825" y="174" fill="#8592b5">ღამე</text>
+        <!-- Ana -->
+        <rect x="165" y="216" width="180" height="60" rx="10" fill="#0b1636" stroke="#3a4d86" stroke-width="2"/><text x="255" y="254" fill="#8592b5">ღამე</text>
+        <rect x="355" y="216" width="180" height="60" rx="10" fill="#26386e"/><text x="445" y="254" fill="#dfe5f5">დღე</text>
+      </g>
+      <!-- chat bubble: below the grid, tail pointing up at Mako's "?" cell -->
+      <g>
+        <path d="M400 306 h30 l15 -22 l15 22 h440 a20 20 0 0 1 20 20 v48 a20 20 0 0 1 -20 20 h-500 a20 20 0 0 1 -20 -20 v-48 a20 20 0 0 1 20 -20 z" fill="#ffffff"/>
+        <text x="420" y="336" fill="#5b6787" font-size="18" font-weight="700">ჯგუფი „ცვლების გაცვლა“ · 23:47</text>
+        <text x="420" y="374" fill="#0a1430" font-size="23" font-weight="600">ხვალ ღამე შენ მაგივრად გავალ, კარგი?</text>
+      </g>
+    </g>
+  </symbol>
+</svg>
+
+<main class="boards">
+  <!-- 1. Facebook / LinkedIn post 1080x1350 -->
+  <figure class="board-wrap" data-board="post">
+    <div class="board-frame">
+      <section class="artboard post" aria-label="Facebook/LinkedIn პოსტი 1080x1350">
+        <div class="topbar">
+          <div class="wordmark"><b>ALL</b> <span>access</span></div>
+          <div class="kicker">კლინიკა · საწყობი · call center</div>
+        </div>
+        <h2 class="headline">ვინ იმუშავა <em>რეალურად</em> ღამის ცვლაში?</h2>
+        <p class="sub">თუ პასუხი WhatsApp-შია, ტაბელს <mark>2 დღე</mark> უნდება.</p>
+        <svg class="roster" viewBox="0 0 920 395" role="img" aria-label="ცვლების გრაფიკი: 14-ის ღამის ცვლა ჩატში გაიცვალა"><use href="#roster"/></svg>
+        <ul class="pains">
+          <li><i class="fa-brands fa-whatsapp" aria-hidden="true"></i>გაცვლები ჩატშია, გრაფიკში სხვა სახელი წერია</li>
+          <li><i class="fa-duotone fa-moon" aria-hidden="true"></i>ღამის ცვლაზე ორივე ამბობს: „მე ვიყავი“</li>
+          <li><i class="fa-duotone fa-file-invoice-dollar" aria-hidden="true"></i>ბუღალტერი ელოდება, ხელფასი გვიანდება</li>
+        </ul>
+        <div class="cta">
+          <div class="cta-text">
+            <div class="cta-title"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i>დაჯავშნე 20 წუთი</div>
+            <div class="cta-line">შენი გასული თვის ანონიმური ცვლების გრაფიკით ტაბელს ერთად ავაწყობთ.</div>
+            <div class="cta-url">allaccess.ge</div>
+          </div>
+          <div class="qr"><svg data-qr viewBox="0 0 29 29" shape-rendering="crispEdges"></svg><small>ფორმის ბმული<br>(placeholder)</small></div>
+        </div>
+      </section>
+    </div>
+    <figcaption>Facebook / LinkedIn პოსტი · 1080x1350</figcaption>
+  </figure>
+
+  <!-- 2. Instagram story 1080x1920 (top/bottom 200px kept clear for app UI) -->
+  <figure class="board-wrap" data-board="story">
+    <div class="board-frame">
+      <section class="artboard story" aria-label="Instagram სთორი 1080x1920">
+        <div class="topbar">
+          <div class="wordmark"><b>ALL</b> <span>access</span></div>
+          <div class="kicker">ცვლებით მომუშავე HR-ს</div>
+        </div>
+        <h2 class="headline">ვინ იმუშავა <em>რეალურად</em> ღამის ცვლაში?</h2>
+        <p class="sub">თუ პასუხი WhatsApp-შია, ტაბელს <mark>2 დღე</mark> უნდება.</p>
+        <svg class="roster" viewBox="0 0 920 395" role="img" aria-label="ცვლების გრაფიკი: 14-ის ღამის ცვლა ჩატში გაიცვალა"><use href="#roster"/></svg>
+        <ul class="pains">
+          <li><i class="fa-brands fa-whatsapp" aria-hidden="true"></i>გაცვლები ჩატშია, გრაფიკში სხვა სახელი წერია</li>
+          <li><i class="fa-duotone fa-moon" aria-hidden="true"></i>ღამის ცვლაზე ორივე ამბობს: „მე ვიყავი“</li>
+          <li><i class="fa-duotone fa-file-invoice-dollar" aria-hidden="true"></i>ბუღალტერი ელოდება, ხელფასი გვიანდება</li>
+        </ul>
+        <div class="cta">
+          <div class="cta-title"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i>დაჯავშნე 20 წუთი</div>
+          <div class="cta-row">
+            <div class="cta-line">შენი გასული თვის ანონიმური ცვლების გრაფიკით ტაბელს ერთად ავაწყობთ.<div class="cta-url">allaccess.ge</div></div>
+            <div class="qr"><svg data-qr viewBox="0 0 29 29" shape-rendering="crispEdges"></svg><small>ფორმის ბმული<br>(placeholder)</small></div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <figcaption>Instagram სთორი · 1080x1920</figcaption>
+  </figure>
+</main>
+
+<!-- mock booking form: doubles as the smoke-test landing page -->
+<section class="landing" id="book">
+  <div class="card" id="card">
+    <div class="wordmark"><b>ALL</b> access</div>
+    <h2>დაჯავშნე 20 წუთი: შენი გასული თვის ანონიმური ცვლების გრაფიკით ტაბელს ერთად ავაწყობთ.</h2>
+    <p class="lede">მოიტანე გრაფიკი სახელების გარეშე. ერთად ვნახავთ, სად იკარგება დრო გაცვლებზე, ღამის ცვლებსა და ტაბელზე.</p>
+    <form id="bookForm" novalidate>
+      <label>სახელი
+        <input name="name" autocomplete="given-name" required placeholder="მაგ. თამარი">
+      </label>
+      <label>ტელეფონი ან ელფოსტა
+        <input name="contact" autocomplete="email" required placeholder="მაგ. 599 12 34 56 ან name@company.ge">
+      </label>
+      <label>კომპანიის ტიპი
+        <select name="type" required>
+          <option value="">აირჩიე</option>
+          <option>კლინიკა</option>
+          <option>საწყობი / ლოჯისტიკა</option>
+          <option>Call center</option>
+          <option>საცალო ქსელი</option>
+          <option>სხვა</option>
+        </select>
+      </label>
+      <label>თანამშრომლების რაოდენობა
+        <select name="staff" required>
+          <option value="">აირჩიე</option>
+          <option>20-ზე ნაკლები</option>
+          <option>20-50</option>
+          <option>51-100</option>
+          <option>100-ზე მეტი</option>
+        </select>
+      </label>
+      <label>სასურველი დრო
+        <select name="time" required>
+          <option value="">აირჩიე</option>
+          <option>სამუშაო დღე, 10:00-12:00</option>
+          <option>სამუშაო დღე, 12:00-15:00</option>
+          <option>სამუშაო დღე, 15:00-18:00</option>
+        </select>
+      </label>
+      <button type="submit"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i> დაჯავშნე 20 წუთი</button>
+      <p class="fine">სადემონსტრაციო ფორმა: მონაცემები არსად იგზავნება.</p>
+    </form>
+    <div class="thanks" role="status" aria-live="polite">
+      <h3>მადლობა!</h3>
+      <p>ჯავშანი მიღებულია. დასადასტურებლად დაგიკავშირდებით.</p>
+    </div>
+  </div>
+  <p class="note">ტესტისთვის: QR და ბმული ამ ფორმას (ან მის Google Forms ვერსიას) უნდა მიუთითებდეს. ტექსტი ეფუძნება სიმულირებულ ინტერვიუებს (სიმულაცია).</p>
+</section>
+
+<script>
+  // QR-style placeholder (NOT a scannable code): finder patterns + deterministic noise
+  (function () {
+    var n = 29, seed = 7, cells = [];
+    function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+    function finder(x, y) {
+      cells.push('<rect x="' + x + '" y="' + y + '" width="7" height="7"/>',
+        '<rect x="' + (x + 1) + '" y="' + (y + 1) + '" width="5" height="5" fill="#fff"/>',
+        '<rect x="' + (x + 2) + '" y="' + (y + 2) + '" width="3" height="3"/>');
+    }
+    function inFinder(x, y) { return (x < 8 && y < 8) || (x > n - 9 && y < 8) || (x < 8 && y > n - 9); }
+    for (var y = 0; y < n; y++) for (var x = 0; x < n; x++) {
+      if (!inFinder(x, y) && rnd() < 0.48) cells.push('<rect x="' + x + '" y="' + y + '" width="1" height="1"/>');
+    }
+    finder(0, 0); finder(n - 7, 0); finder(0, n - 7);
+    var svg = '<g fill="#0a1430">' + cells.join('') + '</g>';
+    document.querySelectorAll('[data-qr]').forEach(function (el) { el.innerHTML = svg; });
+  })();
+
+  // export mode or responsive scaling of the fixed-size artboards
+  (function () {
+    var only = new URLSearchParams(location.search).get('only');
+    var wraps = document.querySelectorAll('.board-wrap');
+    if (only) {
+      document.body.classList.add('export');
+      wraps.forEach(function (w) { if (w.dataset.board === only) w.classList.add('on'); });
+      return;
+    }
+    function fit() {
+      var stacked = window.innerWidth <= 860;
+      var avail = Math.min(window.innerWidth, 1240) - 32;
+      wraps.forEach(function (w) {
+        var board = w.querySelector('.artboard');
+        var bw = 1080, bh = board.classList.contains('story') ? 1920 : 1350;
+        var target = stacked ? Math.min(avail, 540) : (board.classList.contains('story') ? 380 : 540);
+        var s = target / bw;
+        var frame = w.querySelector('.board-frame');
+        board.style.transform = 'scale(' + s + ')';
+        board.style.transformOrigin = '0 0';
+        frame.style.width = (bw * s) + 'px';
+        frame.style.height = (bh * s) + 'px';
+      });
+    }
+    fit();
+    window.addEventListener('resize', fit);
+  })();
+
+  // mock submit
+  document.getElementById('bookForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!this.checkValidity()) { this.reportValidity(); return; }
+    document.getElementById('card').classList.add('done');
+  });
+</script>
+</body>
+</html>
