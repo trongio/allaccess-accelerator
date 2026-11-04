@@ -69,6 +69,7 @@ SECTIONS = [
     ("week1", "კვირა 1: პრობლემა"),
     ("week2-psf", "კვირა 2: Problem-Solution Fit"),
     ("week3", "კვირა 3: Customer Discovery"),
+    ("week4", "კვირა 4: ბიზნეს მოდელი"),
     ("materials", "კურსის მასალები"),
     ("sources", "წყაროები (ტექსტური ამონაწერი)"),
 ]
@@ -106,6 +107,8 @@ def classify(rel: str) -> tuple[str, str | None]:
         return "week1", None
     if sub == "week3":
         return "week3", None
+    if sub == "week4":
+        return "week4", None
     if sub == "week2-psf" or name.startswith("allaccess_psf"):
         low = rel.lower()
         if name.startswith("allaccess_psf"):

@@ -1,0 +1,372 @@
+--- slide 1
+ინოვაცია ბიზნეს მოდელში
+--- slide 2
+--- slide 3
+--- slide 4
+Business Model Canvas
+--- slide 5
+--- slide 6
+--- slide 7
+1. შეთავაზებული ფასეულობა (Value Proposition):
+რატომ ირჩევ ChatGPT-ს?
+--- slide 8
+1. შეთავაზებული ფასეულობა (Value Proposition):
+სიმარტივე
+--- slide 9
+1. შეთავაზებული ფასეულობა (Value Proposition):
+რატომ ირჩევ Tiktok-ს?
+--- slide 10
+1. შეთავაზებული ფასეულობა (Value Proposition):
+მრავალფეროვნება
+--- slide 11
+1. შეთავაზებული ფასეულობა (Value Proposition):
+რელევანტურობა
+--- slide 12
+1. შეთავაზებული ფასეულობა (Value Proposition):
+რატომ ირჩევ Nike-ს?
+--- slide 13
+1. შეთავაზებული ფასეულობა (Value Proposition):
+დიზაინი
+--- slide 14
+1. შეთავაზებული ფასეულობა (Value Proposition):
+კომფორტი
+--- slide 15
+1. შეთავაზებული ფასეულობა (Value Proposition):
+სტატუსი
+--- slide 16
+1. შეთავაზებული ფასეულობა (Value Proposition):
+შინაგანი შეგრძნება
+--- slide 17
+1. შეთავაზებული ფასეულობა (Value Proposition):
+დიზაინი
+ბრენდი და სტატუსი
+ფასი
+სიმარტივე
+--- slide 18
+1. შეთავაზებული ფასეულობა (Value Proposition):
+სიახლე
+უკეთესი ხარისხი
+პერსონალიზაცია
+--- slide 19
+--- slide 20
+რესურსების დაზოგვა
+მეტი ეფექტურობა
+--- slide 21
+მასობრივი ბაზარი
+2. მომხმარებელთა სეგმენტაცია:
+ნიშური ბაზარი
+--- slide 22
+2. მომხმარებელთა სეგმენტაცია:
+კლასიკური სეგმენტაცია
+--- slide 23
+წყლის რესურსების დაზოგვა
+მეტი ეფექტურობა
+ფერმები
+მთავრობა
+--- slide 24
+3. მიწოდების არხები (Channels):
+როგორ ვაწვდით მომხმარებელს ინფორმაციას ჩვენი პროდუქტის შესახებ?
+რა გზებით ვახდენთ პროდუქტის დისტრიბუციას?
+რა გზებით ვყიდით ჩვენს პროდუტქტს?
+--- slide 25
+3. მიწოდების არხები (Channels):
+--- slide 26
+წყლის რესურსების დაზოგვა
+მეტი ეფექტურობა
+ფერმები
+მთავრობა
+ლოკალური ოფისები
+ინტერნეტ მაღაზია
+--- slide 27
+4. მომხმარებელთან ურთიერთობა (Customer Relationships):
+საკონსულტაციო მომსახურება
+ინდივიდუალური მომსახურება
+Self-service
+Co-creation
+--- slide 28
+წყლის რესურსების დაზოგვა
+მეტი ეფექტურობა
+ფერმები
+მთავრობა
+ლოკალური ოფისები
+ინტერნეტ მაღაზია
+ლოკალური ოფისი
+სატელეფონო ცენტრი
+ვებ-გვერდი
+--- slide 29
+შემოსავლის წყაროები (Revenue Streams):
+შემოსავლის წყაროები შესაძლოა განსხვავდებოდეს ბიზნესის საქმიანობისა და პროდუქტის მიხედვით. შემოსავლის მიღების გზა შეიძლება არსებობდეს რამდენიმე ფორმით:
+პროდუქტის გაყიდვა
+პროდუქტის/სერვისით რაღაც ვადით სარგებლობა
+საწევრო გადასახადი / Subscription
+გაქირავება
+ლიცენზირება
+საშუამავლო საკომისიო
+რეკლამირება
+რა კონკრეტულ პროდუქტში იხდის მომხმარებელი ფასს?
+როგორია ფასწარმოქმნა?
+როგორ ხდება თანხის მიღების პროცესი?
+--- slide 30
+Different types of revenue models:
+One-time up-front charge plus maintenance.
+This is the most common business model, where a customer pays a large up-front charge to obtain the product, with the option to secure ongoing upgrades or maintenance of the product for a recurring fee.
+Cost plus.
+In this model, the customer pays a set percentage above the cost of producing the product. This is common in government contracts as well as situations where you and your customer want to share the risk of producing the product.
+Hourly Rates.
+This model also tends to reward activity as opposed to progress, which can be the wrong incentive, but when a project is poorly defined or very dynamic, this might well be the preferred model. A common business model for services firms, it is similar to the Cost plus model, but the rates are set by the market demand rather than costs.
+--- slide 31
+Different types of revenue models:
+Subscription or leasing.
+This is a set payment each month or another predetermined and agreed-upon time period. It is a great way to get a recurring revenue stream. There are a number of variations, including annual or multi-year commitment, month-to-month commitment etc.
+Consumables.
+Another value capture framework that can be advantageous to both the customer and your business is the consumables model. For the customer, the benefit is a low up-front cost, with ongoing costs based on usage, which the customer can usually control.
+Licensing your IP
+to customers and receiving a royalty can result in a very high gross margin (gross margin is the difference between marginal revenue and marginal costs). In addition, if you are licensing your product, you do not have to make big investments in production and distribution capability for a whole product.
+--- slide 32
+Different types of revenue models:
+Upsell with high-margin products.
+Similar to the consumable business model, the central product is sold at a very low margin, but the overall margin is increased from the sale of very high-margin add-on products. This business model is often used in consumer electronics stores or websites and frequently in new car sales.
+Advertising.
+The ability to attract and retain a desirable demographic can be monetized through third parties who want access to the customers you have attracted. When done properly and on a sufficient scale, this can be a very lucrative model, as Google and others have shown.
+Reselling the collected data (or temporary access to it).
+Somewhat similar to the advertising model, reselling user data requires first attracting end users with a free product, then receiving money from third parties who pay for access to demographic and other information about your users.
+--- slide 33
+Different types of revenue models:
+Transaction fee.
+Online retailers often pay or receive a commission for referrals that lead to sales. The model is similar to how credit card companies work, where a percentage of each transaction goes to the credit card company.
+Usage-based.
+A usage-based model— similar to how electric utilities are metered— has been used across various other industries, including cloud computing products today (such as Amazon Web Services).
+"Cell phone plan".
+This is a predictable, recurring base fee charged in exchange for a certain amount of committed usage, with additional charges, often at much higher marginal rates, if the customer uses more than their allotted amount. The base charge is generally far less per amount of usage than the overage charge.
+--- slide 34
+Different types of revenue models:
+Parking meter or penalty charges.
+This is the same business model used by parking meters, credit card companies and (for a while) Blockbuster by charging late fees. Do not take advantage of your customer’s naivete as a central pillar of your business model, as this is a risky strategy.
+Microtransactions.
+A new successful model that came into vogue with online computer games, and is now being tested to try to save newspapers, is microtransactions. In this model, the customer is asked to provide their credit card and then they make very small transactions for digital goods (which have virtually no marginal cost because they are electrons). There are many of them so they can add up.
+Shared savings.
+This business model is often brainstormed, but rarely used because of the complexities in implementing it, despite its conceptual elegance. In this scenario, the customer pays only once they have realized savings or benefits from the product. It is generally not implemented because it is hard to determine how much savings to attribute to the product, especially over a multi-year time period.
+--- slide 35
+Different types of revenue models:
+…
+Franchise.
+If an entrepreneur comes up with a good idea and is able to implement but does not have the desire, skills, or money to roll it out, they can use the franchise model and get paid a percentage of sales and/ or receive a large initial startup fee in return for providing the knowledge and brand that has been developed. You can also make money by selling your brand-name products to the franchises to be distributed.
+--- slide 36
+--- slide 37
+--- slide 38
+წყლის რესურსების დაზოგვა
+მეტი ეფექტურობა
+ფერმები
+მთავრობა
+ლოკალური ოფისები
+ინტერნეტ მაღაზია
+ლოკალური ოფისი
+სატელეფონო ცენტრი
+ვებ-გვერდი
+გაყიდული პროდუქცია
+მხარდაჭერის მომსახურება
+საკონსულტაციო მომსახურება
+--- slide 39
+--- slide 40
+6. ძირითადი რესურსები
+ფიზიკური სივრცე
+აღჭურვილობა და მანქანა-დანადგარები
+ინტელექტუალური საკუთრება
+- ადამიანური რესურსები
+- ფინანსური რესურსები
+--- slide 41
+წყლის რესურსების დაზოგვა
+მეტი ეფექტურობა
+ფერმები
+მთავრობა
+ლოკალური ოფისები
+ინტერნეტ მაღაზია
+ლოკალური ოფისი
+სატელეფონო ცენტრი
+ვებ-გვერდი
+გაყიდული პროდუქტცია
+მხარდაჭერის მომსახურება
+საკონსულტაციო მომსახურება
+საწარმოო რესურსები
+პატენტი
+ბრენდი
+გაყიდვების ქსელი
+ოფისები
+--- slide 42
+7. ძირითადი აქტივობები
+წარმოება
+- კონსალტინგი
+კლიენტთა ქსელის გაფართოება
+პროგრამირება
+--- slide 43
+წყლის რესურსების დაზოგვა
+მეტი ეფექტურობა
+ფერმები
+მთავრობა
+ლოკალური ოფისები
+ინტერნეტ მაღაზია
+ლოკალური ოფისი
+სატელეფონო ცენტრი
+ვებ-გვერდი
+გაყიდული პროდუქტცია
+მხარდაჭერის მომსახურება
+საკონსულტაციო მომსახურება
+საწარმოო რესურსები
+პატენტი
+ბრენდი
+გაყიდვების ქსელი
+პროდუქტის წარმოება
+გაყიდვები
+დისტრიბუცია
+კლიენტთა მხარდაჭერა
+--- slide 44
+სტრატეგიული პარტნიორობა მომწოდებლებთან
+8. ძირითადი პარტნიორები
+--- slide 45
+8. ძირითადი პარტნიორები
+თანამშრომლობა კონკურენტებს შორის
+--- slide 46
+8. ძირითადი პარტნიორები
+თანამშრომლობა ორ განსხვავებულ ბიზნესს შორის საერთ პროდუქტის მიღების მიზნით.
+--- slide 47
+წყლის რესურსების დაზოგვა
+მეტი ეფექტურობა
+ფერმები
+მთავრობა
+ლოკალური ოფისები
+ინტერნეტ მაღაზია
+ლოკალური ოფისი
+სატელეფონო ცენტრი
+ვებ-გვერდი
+გაყიდული პროდუქტცია
+მხარდაჭერის მომსახურება
+საკონსულტაციო მომსახურება
+საწარმოო რესურსები
+პატენტი
+ბრენდი
+გაყიდვების ქსელი
+პროდუქტის წარმოება
+გაყიდვები
+დისტრიბუცია
+კლიენტთა მხარდაჭერა
+ფერმერთა ასოციაციები
+ლოკალური HR სააგენტოები
+დისტრიბუციის კომპანიები
+--- slide 48
+9. ძირითადი ხარჯები
+ხარჯების პოლიტიკა შესაძლოა იყოს:
+ხარჯების შემცირებაზე ორიენტირებული;
+პროდუქტის რაოდენობის/ხარისხის ზრდაზე ორიენტირებული
+--- slide 49
+წყლის რესურსების დაზოგვა
+მეტი ეფექტურობა
+ფერმები
+მთავრობა
+ლოკალური ოფისები
+ინტერნეტ მაღაზია
+ლოკალური ოფისი
+სატელეფონო ცენტრი
+ვებ-გვერდი
+გაყიდული პროდუქტცია
+მხარდაჭერის მომსახურება
+საკონსულტაციო მომსახურება
+საწარმოო რესურსები
+პატენტი
+ბრენდი
+გაყიდვების ქსელი
+პროდუქტის წარმოება
+გაყიდვები
+დისტრიბუცია
+კლიენტთა მხარდაჭერა
+ფერმერთა ასოციაციები
+ლოკალური HR სააგენტოები
+დისტრიბუციის კომპანიები
+წარმოება
+მარკეტინგი
+ოფისები
+დისტრიბუცია
+კლიენტთა მხარდაჭერა
+--- slide 50
+ინოვაცია და სამეწარმეო უპირატესობა
+Giorgi Kintsurashvili, BTU, 2021
+ინოვაცია ბიზნეს მოდელში
+[notes] ‹#›
+--- slide 51
+Innovation in Customer Channels
+--- slide 52
+Innovation in Customer Channels
+--- slide 53
+Innovation in Customer Channels
+[notes] https://www.youtube.com/watch?v=gvEU656kVCQ ‹#›
+--- slide 54
+Drivers are partners, not employees
+[notes] https://www.youtube.com/watch?v=gvEU656kVCQ ‹#›
+--- slide 55
+Dynamic pricing
+Simplicity
+Speed of service
+Drivers
+[notes] https://www.youtube.com/watch?v=gvEU656kVCQ ‹#›
+--- slide 56
+Innovation in Revenue Streams
+Free, but with ads.
+$9.99 – no ads
+--- slide 57
+--- slide 58
+Cheap
+Simple
+Better experience
+More options
+Unique options
+Trust
+Hosts
+Those who prefer apartments over hotels
+0 property
+Marketing
+Customer support
+--- slide 59
+--- slide 60
+First company ever, to create premium class electric cars
+--- slide 61
+Superchargers
+Stronger batteries
+Self-driving cars
+--- slide 62
+Showrooms in malls.
+--- slide 63
+Innovation
+Environmentally friendly
+Design
+Prestige
+Young
+Rich
+Takes care of environment
+R&D
+Production
+Cars
+Supercharger network
+--- slide 64
+Wikipedia
+Wikipedia has more than 5.5 million articles, 33 million registered users, 32.5 million active editors, and an average 600 new articles a day just on the English version.
+The Wikimedia Foundation is a not-for-profit organization which supports Wikipedia and many other free knowledge websites to fulfill its vision to create a knowledge database which is available to all for free.
+Donations:
+[notes] https://www.feedough.com/how-does-wikipedia-make-money-wikipedia-business-model/ ‹#›
+--- slide 65
+Contributors
+Wikipedia
+Article Preparations
+Revision
+X
+--- slide 66
+reCaptcha
+Google acquired reCAPTCHA in September 2009 and have been using it as an important feature of its Google Books project where rare, ancient and out-of-print books are digitalized and offered to the public.
+With the use of reCAPTCHA, humans have digitalized over 13 million archived articles of The New York Times from the past 20 years or so in just a few months.
+Each and every word is shown in reCAPTCHA is a scanned word from one of the millions of texts from this world.
+[notes] https://www.feedough.com/recaptcha-business-model/ ‹#›
+--- slide 67
+reCaptcha
+Content Revision
+X
+--- slide 68
+Duolingo
+Collecting translations for digitizing books

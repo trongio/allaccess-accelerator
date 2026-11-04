@@ -46,6 +46,7 @@ ALL access-ის (allaccess.ge) გუნდის ნამუშევარ�
 | 3 | Team Sprint + Validation Experiment | [`allaccess/week3/validation-plan.md`](allaccess/week3/validation-plan.md) |
 | 3 | 60-წამიანი გუნდური განახლება | [`allaccess/week3/team-update-60s.md`](allaccess/week3/team-update-60s.md) |
 | 3 | საშინაო დავალება | [`allaccess/week3/homework.md`](allaccess/week3/homework.md) |
+| 4 | Business Model Canvas | [`allaccess/week4/AllAccess_BMC.pdf`](allaccess/week4/AllAccess_BMC.pdf), [`business-model-canvas.md`](allaccess/week4/business-model-canvas.md) |
 
 კურსის წყარო-სლაიდები: `პრეზენტაციები-20261030T115705Z-1-001/`; მათი ტექსტური ამონაწერები: `allaccess/_sources/*.txt`. ჩასაბარებელი საქაღალდე: `დავალებები -20261030T115704Z-1-001/დავალებები /ALL Access/` (სხვა გუნდების საქაღალდეებს არ ვეხებით).
 
