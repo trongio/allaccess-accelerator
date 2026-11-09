@@ -47,6 +47,7 @@ ALL access-ის (allaccess.ge) გუნდის ნამუშევარ�
 | 3 | 60-წამიანი გუნდური განახლება | [`allaccess/week3/team-update-60s.md`](allaccess/week3/team-update-60s.md) |
 | 3 | საშინაო დავალება | [`allaccess/week3/homework.md`](allaccess/week3/homework.md) |
 | 4 | Business Model Canvas | [`allaccess/week4/AllAccess_BMC.pdf`](allaccess/week4/AllAccess_BMC.pdf), [`business-model-canvas.md`](allaccess/week4/business-model-canvas.md) |
+| 4 | საშინაო: Make your startup profitable | [`AllAccess_Week4_Homework.pdf`](allaccess/week4/homework/AllAccess_Week4_Homework.pdf), [`.docx`](allaccess/week4/homework/AllAccess_Week4_Homework.docx), [`BMC .pptx`](allaccess/week4/homework/AllAccess_Week4_BMC.pptx), [`homework.md`](allaccess/week4/homework/homework.md) (P1-P5 ფასის ინტერვიუები შესავსებია, 12.11 23:59) |
 
 კურსის წყარო-სლაიდები: `პრეზენტაციები-20261030T115705Z-1-001/`; მათი ტექსტური ამონაწერები: `allaccess/_sources/*.txt`. ჩასაბარებელი საქაღალდე: `დავალებები -20261030T115704Z-1-001/დავალებები /ALL Access/` (სხვა გუნდების საქაღალდეებს არ ვეხებით).
 
